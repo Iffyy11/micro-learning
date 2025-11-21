@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lesson 1 — Caching Basics</title>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <h1 class="logo">Micro-Larning Portal</h1>
+  </div>
+</header>
+
+<nav class="primary-nav" aria-label="Primary navigation">
+  <ul class="nav-list">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="lesson1.html" aria-current="page">Lessons</a></li>
+    <li><a href="form.html">Progress</a></li>
+  </ul>
+</nav>
+
+<main id="main" class="main-content container" tabindex="-1">
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="../index.html">Home</a></li>
+      <li>Lesson 1</li>
+    </ol>
+  </nav>
+
+  <article class="lesson">
+    <h1 class="lesson-title">Lesson 1 — Caching Basics</h1>
+
+    <section class="lesson-content">
+      <h2>What is caching?</h2>
+      <p>Caching stores frequently accessed data so it can be retrieved faster.</p>
+
+      <h3>Why caching matters</h3>
+      <ul>
+        <li>Reduces repeated network calls</li>
+        <li>Improves responsiveness</li>
+        <li>Decreases server load</li>
+      </ul>
+
+      <h3>Types of caching</h3>
+      <ul>
+        <li><strong>Browser cache:</strong> stores HTML, CSS, JS, images.</li>
+        <li><strong>Memory cache:</strong> extremely fast (RAM-based).</li>
+        <li><strong>Disk cache:</strong> persistent storage but slower than memory.</li>
+        <li><strong>Application cache:</strong> custom caching logic.</li>
+      </ul>
+
+      <h3>Quick Check Questions</h3>
+      <ol>
+        <li>What is the main benefit of caching?</li>
+        <li>Name two types of caching.</li>
+        <li>What does stale cache mean?</li>
+      </ol>
+    </section>
+
+    <div class="lesson-nav">
+      <a class="btn" href="lesson0.html">Previous</a>
+      <a class="btn" href="lesson2.html">Next</a>
+    </div>
+  </article>
+
+  <aside class="lesson-aside" aria-labelledby="progress-title">
+    <h2 id="progress-title">Progress</h2>
+    <meter min="0" max="100" value="30">30%</meter>
+    <p>Completed: 3 of 10 lessons</p>
+  </aside>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© 2025 Micro-Learning Portal</p>
+  </div>
+</footer>
+
+<script src="../js/a11y.js" defer></script>
+</body>
+</html>

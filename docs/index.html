@@ -6,6 +6,7 @@
   <title>Micro-Learning Portal — Home</title>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/figma-design.css">
 </head>
 <body>
 
@@ -19,38 +20,39 @@
 
 <nav class="primary-nav" aria-label="Primary navigation">
   <ul class="nav-list">
-    <li><a href="index.html" aria-current="page">Home</a></li>
-    <li><a href="views/lesson1.html">Lessons</a></li>
-    <li><a href="views/form.html">Progress</a></li>
+    <li><a href="#/" aria-current="page">Home</a></li>
+    <li><a href="#/lessons">Lessons</a></li>
+    <li><a href="#/progress">Progress</a></li>
   </ul>
 </nav>
 
 <main id="main" class="main-content container" tabindex="-1">
-  <section class="hero">
-    <h2>Learn fast. Learn anywhere.</h2>
-    <p>Short lessons designed for quick progress.</p>
-  </section>
+  <div id="app-content">
+    <!-- Content will be dynamically loaded by the router -->
+    <section class="hero">
+      <h2>Learn fast. Learn anywhere.</h2>
+      <p>Short lessons designed for quick progress.</p>
+    </section>
 
-  <section class="quick-actions">
-    <div class="card-grid">
+    <section class="quick-actions">
+      <div class="card-grid">
+        <a href="#/lesson/1" class="card">
+          <h3>Start a Lesson</h3>
+          <p>Jump into the first module.</p>
+        </a>
 
-      <a href="views/lesson1.html" class="card">
-        <h3>Start a Lesson</h3>
-        <p>Jump into the first module.</p>
-      </a>
+        <a href="#/progress" class="card">
+          <h3>Your Progress</h3>
+          <p>Track your learning journey.</p>
+        </a>
 
-      <a href="views/lesson1.html" class="card">
-        <h3>Continue</h3>
-        <p>Resume where you left off.</p>
-      </a>
-
-      <a href="views/form.html" class="card">
-        <h3>Take a Quiz</h3>
-        <p>Test your understanding.</p>
-      </a>
-
-    </div>
-  </section>
+        <a href="#/quiz" class="card">
+          <h3>Take a Quiz</h3>
+          <p>Test your understanding.</p>
+        </a>
+      </div>
+    </section>
+  </div>
 </main>
 
 <footer class="site-footer">
@@ -59,6 +61,7 @@
   </div>
 </footer>
 
+<script type="module" src="js/app.js"></script>
 <script src="js/a11y.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,20 @@
+{
+  "name": "micro-learning-portal",
+  "version": "1.0.0",
+  "description": "Micro-learning platform with modular architecture",
+  "type": "module",
+  "scripts": {
+    "dev": "npx http-server docs -p 8080 -o",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
+  },
+  "keywords": ["micro-learning", "education", "spa"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^1.0.4",
+    "@vitest/ui": "^1.0.4",
+    "happy-dom": "^12.10.3"
+  }
+}

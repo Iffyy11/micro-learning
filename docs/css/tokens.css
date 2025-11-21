@@ -1,17 +1,29 @@
 /* Design tokens — extended and documented */
 :root {
-  /* ---- Colors ---- */
-  --clr-bg: #ffffff;            /* page background */
-  --clr-surface: #f7f8fb;       /* card / surface */
-  --clr-muted: #6b7280;         /* secondary text */
-  --clr-text: #0f1724;          /* primary text */
-  --clr-accent: #0b63ff;        /* primary brand */
-  --clr-accent-600: #0649c1;    /* darker accent */
-  --clr-success: #0f9d58;
-  --clr-error: #e53e3e;
+  /* ---- Colors - Matching Figma Design ---- */
+  --clr-bg: #FAFAFA;            /* page background */
+  --clr-surface: #F5F5F7;       /* card / surface */
+  --clr-muted: #6E6E73;         /* secondary text */
+  --clr-text: #1D1D1F;          /* primary text */
+  --clr-accent: #1E7EF5;        /* primary brand - bright blue */
+  --clr-accent-light: #5EA3FF;  /* lighter accent */
+  --clr-accent-600: #0b63ff;    /* darker accent */
+  --clr-orange: #FF5722;        /* orange accent for streaks */
+  --clr-orange-light: #FF7043;  /* lighter orange */
+  --clr-purple: #9C27B0;        /* purple accent */
+  --clr-purple-light: #BA68C8;  /* lighter purple */
+  --clr-green: #10B981;         /* green for success/beginner */
+  --clr-green-light: #D1FAE5;   /* light green background */
+  --clr-yellow: #FFC107;        /* yellow for intermediate */
+  --clr-yellow-light: #FFF9C4;  /* light yellow background */
+  --clr-red: #EF4444;           /* red for advanced */
+  --clr-red-light: #FEE2E2;     /* light red background */
+  --clr-blue-light: #DBEAFE;    /* light blue background */
+  --clr-success: #10B981;
+  --clr-error: #EF4444;
 
   /* Focus ring colour chosen for high visibility */
-  --clr-focus: #ffb703;
+  --clr-focus: #1E7EF5;
 
   /* ---- Accessibility helpers ---- */
   --contrast-high: #111827;     /* used for high-contrast UI elements */
@@ -28,12 +40,27 @@
   --space-2xl: 3rem;
 
   /* ---- Radii ---- */
-  --radius-sm: 6px;
+  --radius-sm: 8px;
   --radius-md: 12px;
+  --radius-lg: 16px;
 
   /* ---- Typography ---- */
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+
+  /* ---- Shadows for depth ---- */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-accent: 0 8px 20px rgba(30, 126, 245, 0.25);
+
+  /* ---- Gradients ---- */
+  --gradient-primary: linear-gradient(135deg, #1E7EF5 0%, #5EA3FF 100%);
+  --gradient-success: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+  --gradient-orange: linear-gradient(135deg, #FF5722 0%, #FF7043 100%);
+  --gradient-purple: linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%);
+  --gradient-hero: linear-gradient(135deg, #1E7EF5 0%, #9C27B0 100%);
 
   --type-base: 16px;
   --type-scale: 1rem; /* base */

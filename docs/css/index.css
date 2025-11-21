@@ -1,0 +1,523 @@
+/* Figma Design Overrides - Matching the exact design */
+
+/* Navigation Enhancement */
+.primary-nav {
+  background: var(--clr-accent);
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.nav-list {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.nav-list a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 1rem 2rem;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.nav-list a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-list a[aria-current="page"] {
+  border-bottom-color: var(--white);
+  background: rgba(255, 255, 255, 0.15);
+  text-decoration: none;
+}
+
+/* Hero Section */
+.hero {
+  text-align: left;
+  padding: var(--space-xl) 0;
+}
+
+.hero h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-sm);
+  color: var(--clr-text);
+}
+
+.hero p {
+  font-size: 1.125rem;
+  color: var(--clr-muted);
+  margin: 0;
+}
+
+/* Card Grid for Home Page */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-decoration: none;
+  color: var(--clr-text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid transparent;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  border-color: var(--clr-accent);
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-xs);
+  color: var(--clr-text);
+}
+
+.card p {
+  margin: 0;
+  color: var(--clr-muted);
+}
+
+/* Large Stat Cards (Blue and Orange) */
+.stat-card-large {
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card-large.blue {
+  background: linear-gradient(135deg, var(--clr-accent) 0%, var(--clr-accent-light) 100%);
+}
+
+.stat-card-large.orange {
+  background: linear-gradient(135deg, var(--clr-orange) 0%, var(--clr-orange-light) 100%);
+}
+
+.stat-card-large h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 var(--space-md);
+  opacity: 0.9;
+}
+
+.stat-card-large .stat-number {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: var(--space-sm) 0;
+}
+
+.stat-card-large .stat-label {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+/* Progress Stats (Completion Rate, Average Score, Total Points) */
+.progress-stat {
+  background: var(--white);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.progress-stat.blue {
+  background: var(--clr-blue-light);
+  border-color: var(--clr-accent);
+}
+
+.progress-stat.green {
+  background: var(--clr-green-light);
+  border-color: var(--clr-green);
+}
+
+.progress-stat.purple {
+  background: #F3E5F5;
+  border-color: var(--clr-purple);
+}
+
+.progress-stat h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: var(--space-sm) 0;
+}
+
+.progress-stat.blue h2 {
+  color: var(--clr-accent);
+}
+
+.progress-stat.green h2 {
+  color: var(--clr-green);
+}
+
+.progress-stat.purple h2 {
+  color: var(--clr-purple);
+}
+
+.progress-stat p {
+  margin: 0;
+  color: var(--clr-muted);
+  font-size: 0.95rem;
+}
+
+/* Lesson Cards with Tags */
+.lesson-card {
+  background: var(--white);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #E5E5E7;
+  transition: all 0.2s;
+  margin-bottom: var(--space-md);
+}
+
+.lesson-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: var(--clr-accent);
+}
+
+.lesson-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.lesson-card .check-icon {
+  color: var(--clr-green);
+  font-size: 1.5rem;
+}
+
+.lesson-card p {
+  color: var(--clr-muted);
+  margin: 0 0 var(--space-md);
+}
+
+.lesson-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.lesson-meta .time {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  color: var(--clr-muted);
+  font-size: 0.9rem;
+}
+
+/* Difficulty & Category Tags */
+.tag {
+  display: inline-block;
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+}
+
+.tag.beginner {
+  background: var(--clr-green-light);
+  color: #047857;
+}
+
+.tag.intermediate {
+  background: var(--clr-yellow-light);
+  color: #92400E;
+}
+
+.tag.advanced {
+  background: var(--clr-red-light);
+  color: #991B1B;
+}
+
+.tag.category {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+
+/* Study Button */
+.btn-study {
+  background: var(--clr-accent);
+  color: var(--white);
+  border: none;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-study:hover {
+  background: var(--clr-accent-600);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 126, 245, 0.3);
+}
+
+/* Achievement Cards */
+.achievement {
+  background: var(--white);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 2px solid transparent;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.achievement.earned.blue {
+  border-color: var(--clr-accent);
+  background: #EFF6FF;
+}
+
+.achievement.earned.purple {
+  border-color: var(--clr-purple);
+  background: #FAF5FF;
+}
+
+.achievement.earned.orange {
+  border-color: var(--clr-orange);
+  background: #FFF7ED;
+}
+
+.achievement.earned.green {
+  border-color: var(--clr-green);
+  background: #ECFDF5;
+}
+
+.achievement.locked {
+  opacity: 0.4;
+  background: #F9FAFB;
+}
+
+.achievement-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-sm);
+}
+
+.achievement.earned.blue .achievement-icon {
+  color: var(--clr-accent);
+}
+
+.achievement.earned.purple .achievement-icon {
+  color: var(--clr-purple);
+}
+
+.achievement.earned.orange .achievement-icon {
+  color: var(--clr-orange);
+}
+
+.achievement.earned.green .achievement-icon {
+  color: var(--clr-green);
+}
+
+.achievement h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-2xs);
+}
+
+.achievement p {
+  font-size: 0.875rem;
+  color: var(--clr-muted);
+  margin: 0;
+}
+
+.achievement .unlock-badge {
+  display: inline-block;
+  margin-top: var(--space-sm);
+  padding: var(--space-2xs) var(--space-md);
+  border: 1px solid currentColor;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Lesson Status List */
+.lesson-status-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.lesson-status-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.lesson-status-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.lesson-status-icon.completed {
+  background: var(--clr-green-light);
+  color: var(--clr-green);
+}
+
+.lesson-status-icon.in-progress {
+  background: var(--clr-blue-light);
+  color: var(--clr-accent);
+}
+
+.lesson-status-icon.not-started {
+  background: var(--clr-surface);
+  color: var(--clr-muted);
+}
+
+.lesson-status-text h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.lesson-status-text p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--clr-muted);
+}
+
+.lesson-quiz-score {
+  padding: var(--space-2xs) var(--space-md);
+  background: var(--clr-green-light);
+  color: #047857;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: var(--clr-accent);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--clr-accent-600);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 126, 245, 0.3);
+}
+
+/* Progress Bar */
+.progress-bar-section {
+  margin: var(--space-xl) 0;
+}
+
+.progress-bar-container {
+  background: #E5E7EB;
+  border-radius: 20px;
+  height: 12px;
+  overflow: hidden;
+  margin-top: var(--space-sm);
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, var(--clr-accent), var(--clr-purple));
+  height: 100%;
+  border-radius: 20px;
+  transition: width 0.5s ease;
+}
+
+/* Bookmark Icon */
+.bookmark-icon {
+  color: var(--clr-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.bookmark-icon:hover {
+  color: var(--clr-accent);
+}
+
+/* Search Input */
+.search-input {
+  width: 100%;
+  padding: var(--space-md);
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  background: var(--white);
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--clr-accent);
+  box-shadow: 0 0 0 3px rgba(30, 126, 245, 0.1);
+}
+
+/* Filter Selects */
+.filter-group {
+  display: flex;
+  gap: var(--space-md);
+  margin: var(--space-md) 0;
+}
+
+.filter-select {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  background: var(--white);
+  cursor: pointer;
+}
+
+/* Streak Badge */
+.streak-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  background: #FFF7ED;
+  color: var(--clr-orange);
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}

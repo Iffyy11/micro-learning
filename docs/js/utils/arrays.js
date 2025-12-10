@@ -1,11 +1,10 @@
 /**
- * Array Utilities
- * Pure functions for array manipulation
+ * Array utility functions
  */
 
 /**
- * Remove duplicates from array
- * @param {Array} arr - Input array
+ * Remove duplicate values from an array
+ * @param {Array} arr - The array to process
  * @returns {Array} Array with duplicates removed
  */
 export function removeDuplicates(arr) {
@@ -13,23 +12,24 @@ export function removeDuplicates(arr) {
 }
 
 /**
- * Calculate percentage
- * @param {number} part - Part value
- * @param {number} total - Total value
- * @returns {number} Percentage (0-100)
+ * Calculate percentage and round to nearest integer
+ * @param {number} value - The value
+ * @param {number} total - The total
+ * @returns {number} Percentage rounded to nearest integer
  */
-export function calculatePercentage(part, total) {
+export function calculatePercentage(value, total) {
   if (total === 0) return 0;
-  return Math.round((part / total) * 100);
+  return Math.round((value / total) * 100);
 }
 
 /**
- * Chunk array into smaller arrays
- * @param {Array} arr - Input array
- * @param {number} size - Chunk size
+ * Split array into chunks of specified size
+ * @param {Array} arr - The array to chunk
+ * @param {number} size - The chunk size
  * @returns {Array} Array of chunks
  */
 export function chunkArray(arr, size) {
+  if (arr.length === 0) return [];
   const chunks = [];
   for (let i = 0; i < arr.length; i += size) {
     chunks.push(arr.slice(i, i + size));
@@ -38,9 +38,9 @@ export function chunkArray(arr, size) {
 }
 
 /**
- * Shuffle array (Fisher-Yates algorithm)
- * @param {Array} arr - Input array
- * @returns {Array} Shuffled array
+ * Shuffle array using Fisher-Yates algorithm (returns new array)
+ * @param {Array} arr - The array to shuffle
+ * @returns {Array} New shuffled array
  */
 export function shuffleArray(arr) {
   const shuffled = [...arr];
@@ -53,15 +53,17 @@ export function shuffleArray(arr) {
 
 /**
  * Sort array of objects by property
- * @param {Array} arr - Array of objects
- * @param {string} key - Property key to sort by
- * @param {boolean} ascending - Sort direction
- * @returns {Array} Sorted array
+ * @param {Array} arr - The array to sort
+ * @param {string} property - The property to sort by
+ * @param {boolean} ascending - Sort order (default: true)
+ * @returns {Array} New sorted array
  */
-export function sortByProperty(arr, key, ascending = true) {
-  return [...arr].sort((a, b) => {
-    if (a[key] < b[key]) return ascending ? -1 : 1;
-    if (a[key] > b[key]) return ascending ? 1 : -1;
+export function sortByProperty(arr, property, ascending = true) {
+  const sorted = [...arr];
+  sorted.sort((a, b) => {
+    if (a[property] < b[property]) return ascending ? -1 : 1;
+    if (a[property] > b[property]) return ascending ? 1 : -1;
     return 0;
   });
+  return sorted;
 }

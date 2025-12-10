@@ -680,3 +680,331 @@ a, button, .btn, .card, .achievement, .lesson-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ---------- Loading Spinner ---------- */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  min-height: 200px;
+}
+
+.loading-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 9999;
+  min-height: 100vh;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  position: relative;
+  display: inline-block;
+}
+
+.spinner-small {
+  width: 30px;
+  height: 30px;
+}
+
+.spinner-medium {
+  width: 50px;
+  height: 50px;
+}
+
+.spinner-large {
+  width: 70px;
+  height: 70px;
+}
+
+.spinner-ring {
+  position: absolute;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.spinner-small .spinner-ring {
+  border-width: 2px;
+}
+
+.spinner-ring:nth-child(1) {
+  width: 100%;
+  height: 100%;
+  border-top-color: var(--clr-accent);
+  animation-delay: -0.45s;
+}
+
+.spinner-ring:nth-child(2) {
+  width: 80%;
+  height: 80%;
+  top: 10%;
+  left: 10%;
+  border-top-color: var(--clr-accent-500);
+  animation-delay: -0.3s;
+}
+
+.spinner-ring:nth-child(3) {
+  width: 60%;
+  height: 60%;
+  top: 20%;
+  left: 20%;
+  border-top-color: var(--clr-accent-400);
+  animation-delay: -0.15s;
+}
+
+.spinner-ring:nth-child(4) {
+  width: 40%;
+  height: 40%;
+  top: 30%;
+  left: 30%;
+  border-top-color: var(--clr-accent-300);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  margin-top: var(--space-md);
+  color: var(--clr-text-light);
+  font-size: var(--type-sm);
+  font-weight: 500;
+}
+
+/* ---------- Error Messages ---------- */
+.error-message {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  margin: var(--space-md) 0;
+  animation: slideInDown 0.3s ease-out;
+}
+
+.error-message-error {
+  background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+  border: 2px solid #F87171;
+  color: #991B1B;
+}
+
+.error-message-warning {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border: 2px solid #FBBF24;
+  color: #92400E;
+}
+
+.error-message-info {
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+  border: 2px solid #60A5FA;
+  color: #1E40AF;
+}
+
+.error-fullscreen {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 500px;
+  width: 90%;
+  z-index: 9998;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.error-content {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+}
+
+.error-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.error-details {
+  flex: 1;
+}
+
+.error-title {
+  margin: 0 0 var(--space-xs) 0;
+  font-size: var(--type-lg);
+  font-weight: 700;
+}
+
+.error-text {
+  margin: 0;
+  font-size: var(--type-sm);
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.error-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  justify-content: flex-end;
+}
+
+.error-retry,
+.error-dismiss {
+  cursor: pointer;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Error Toast */
+.error-toast {
+  position: fixed;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
+  color: white;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  max-width: 400px;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.error-toast-show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.error-toast-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.error-toast-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.error-toast-message {
+  font-size: var(--type-sm);
+  line-height: 1.5;
+}
+
+/* ---------- Enhanced Animations ---------- */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.lesson-card {
+  animation: slideInUp 0.4s ease-out backwards;
+}
+
+.lesson-card:nth-child(odd) {
+  animation-delay: 0.05s;
+}
+
+.lesson-card:nth-child(even) {
+  animation-delay: 0.1s;
+}
+
+/* Hover effects */
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.lesson-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Skeleton loading effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0px,
+    #e0e0e0 40px,
+    #f0f0f0 80px
+  );
+  background-size: 1000px 100%;
+}

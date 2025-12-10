@@ -1,31 +1,51 @@
-/**
- * Main Application Entry Point
- * Initializes routing, state management, and core UI logic
- */
-
+// Core imports (always needed)
 import { router, initializeRoutes, routes } from './router/router.js';
 import { store } from './store/state.js';
-import { createLesson, getAllLessons } from './components/Lesson.js';
-import { createQuiz } from './components/Quiz.js';
-import { createProgress } from './components/Progress.js';
 import { qs } from './utils/dom.js';
+import { api, APIError } from './api/api.js';
+import { dbManager } from './storage/indexedDB.js';
+import { LoadingSpinner, showLoadingOverlay, hideLoadingOverlay } from './components/LoadingSpinner.js';
+import { ErrorMessage, showErrorToast, showNetworkError } from './components/ErrorMessage.js';
+import { debounce } from './utils/debounce.js';
 
-/**
- * Main application class
- */
+// Lazy-loaded modules (loaded on demand)
+let LessonModule = null;
+let QuizModule = null;
+let ProgressModule = null;
+
 class App {
   constructor() {
     this.container = null;
     this.currentComponent = null;
+    this.lessons = [];
+    this.isOnline = navigator.onLine;
   }
 
-  /**
-   * Initialize the application
-   */
-  init() {
+  // Lazy load modules on demand for performance
+  async loadLessonModule() {
+    if (!LessonModule) {
+      LessonModule = await import('./components/Lesson.js');
+    }
+    return LessonModule;
+  }
+
+  async loadQuizModule() {
+    if (!QuizModule) {
+      QuizModule = await import('./components/Quiz.js');
+    }
+    return QuizModule;
+  }
+
+  async loadProgressModule() {
+    if (!ProgressModule) {
+      ProgressModule = await import('./components/Progress.js');
+    }
+    return ProgressModule;
+  }
+
+  async init() {
     console.log('🚀 Initializing Micro-Learning Portal...');
     
-    // Get main content container
     this.container = qs('#app-content') || qs('main');
     
     if (!this.container) {
@@ -33,39 +53,82 @@ class App {
       return;
     }
 
-    // Initialize routes
-    this.initRoutes();
-    
-    // Load initial state from localStorage
-    this.loadState();
-    
-    // Subscribe to state changes
-    this.subscribeToState();
-    
-    console.log('✓ Application initialized');
+    showLoadingOverlay('Initializing app...');
+
+    try {
+      await dbManager.init();
+      console.log('✓ IndexedDB initialized');
+      
+      await this.loadLessons();
+      
+      this.initRoutes();
+      this.loadState();
+      this.subscribeToState();
+      this.setupNetworkListeners();
+      
+      console.log('✓ Application initialized');
+      
+    } catch (error) {
+      console.error('Failed to initialize app:', error);
+      showErrorToast('Failed to initialize application');
+    } finally {
+      hideLoadingOverlay();
+    }
   }
 
-  /**
-   * Initialize application routes
-   */
+  async loadLessons() {
+    try {
+      const cachedLessons = await dbManager.getLessons();
+      
+      if (cachedLessons && cachedLessons.length > 0) {
+        this.lessons = cachedLessons;
+        console.log('✓ Loaded lessons from IndexedDB cache');
+      }
+      
+      if (this.isOnline) {
+        const response = await api.getAllLessons();
+        this.lessons = response.data;
+        await dbManager.saveLessons(this.lessons);
+        console.log('✓ Fetched fresh lessons from API');
+      }
+      
+      store.setState({ lessons: this.lessons });
+    } catch (error) {
+      console.error('Failed to load lessons:', error);
+      if (this.lessons.length === 0) {
+        showErrorToast('Failed to load lessons');
+      }
+    }
+  }
+
+  setupNetworkListeners() {
+    window.addEventListener('online', () => {
+      this.isOnline = true;
+      showErrorToast('Back online! 🎉', 3000);
+      this.loadLessons();
+    });
+
+    window.addEventListener('offline', () => {
+      this.isOnline = false;
+      showErrorToast('You are offline. Using cached data.', 5000);
+    });
+  }
+
   initRoutes() {
     initializeRoutes({
       home: () => this.renderHome(),
       lessons: () => this.renderLessonsList(),
-      lessonDetail: (params) => this.renderLesson(params.id),
+      lessonDetail: (params) => this.renderLessonAsync(params.id),
       quiz: () => this.renderQuiz('caching-basics'),
       progress: () => this.renderProgress()
     });
   }
 
-  /**
-   * Render home page
-   */
   renderHome() {
-    const lessons = getAllLessons();
+    const lessons = this.lessons.length > 0 ? this.lessons : [];
     const completedLessons = store.get('completedLessons') || [];
     const progress = store.get('progress') || 0;
-    const totalLessons = lessons.length;
+    const totalLessons = lessons.length || 10;
     const completedCount = completedLessons.length;
     
     this.container.innerHTML = `
@@ -118,11 +181,9 @@ class App {
     `;
   }
 
-  /**
-   * Render lessons list
-   */
-  renderLessonsList() {
-    const lessons = getAllLessons();
+  async renderLessonsList() {
+    const { getAllLessons } = await this.loadLessonModule();
+    const lessons = this.lessons.length > 0 ? this.lessons : getAllLessons();
     const completedLessons = store.get('completedLessons') || [];
     
     this.container.innerHTML = `
@@ -133,12 +194,18 @@ class App {
           <h2 style="margin-top: 0;">All Lessons</h2>
           
           <div style="margin: 1.5rem 0;">
-            <input type="text" placeholder="Search lessons..." class="search-input" style="margin-bottom: 1rem;">
+            <input 
+              type="text" 
+              id="lesson-search" 
+              placeholder="🔍 Search lessons..." 
+              class="search-input" 
+              style="margin-bottom: 1rem;"
+              aria-label="Search lessons">
             
             <div class="filter-group">
               <div>
                 <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Category</label>
-                <select class="filter-select">
+                <select class="filter-select" id="category-filter">
                   <option>All</option>
                   <option>Performance</option>
                   <option>Database</option>
@@ -148,88 +215,234 @@ class App {
               
               <div>
                 <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Difficulty</label>
-                <select class="filter-select">
+                <select class="filter-select" id="difficulty-filter">
                   <option>All</option>
-                  <option>Beginner</option>
-                  <option>Intermediate</option>
-                  <option>Advanced</option>
+                  <option>beginner</option>
+                  <option>intermediate</option>
+                  <option>advanced</option>
                 </select>
               </div>
             </div>
           </div>
           
-          <div style="margin-top: 2rem;">
-            ${lessons.map((lesson, index) => {
-              const isCompleted = completedLessons.includes(lesson.id);
-              const difficulties = ['beginner', 'intermediate', 'intermediate', 'advanced'];
-              const categories = ['Performance', 'Database', 'Performance', 'Infrastructure'];
-              const times = [5, 6, 7, 8];
-              
-              return `
-                <div class="lesson-card">
-                  <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div style="flex: 1;">
-                      <h3>
-                        ${isCompleted ? '<span class="check-icon">✓</span>' : ''}
-                        Lesson ${lesson.id}: ${lesson.title}
-                      </h3>
-                      <p>Learn the fundamentals of ${lesson.title.toLowerCase()} and how it improves application performance.</p>
-                      
-                      <div class="lesson-meta">
-                        <span class="time">⏱ ${times[index] || 5} min</span>
-                        <span class="tag ${difficulties[index] || 'beginner'}">${difficulties[index] || 'Beginner'}</span>
-                        <span class="tag category">${categories[index] || 'General'}</span>
-                      </div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-left: 2rem;">
-                      <span class="bookmark-icon">🔖</span>
-                      <a href="#/lesson/${lesson.id}" class="btn-study">
-                        📚 Study
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('')}
+          <div id="lessons-container">
+            ${this.renderLessonsGrid(lessons, completedLessons)}
           </div>
         </div>
       </div>
     `;
+    
+    this.setupSearch();
   }
 
-  /**
-   * Render specific lesson
-   * @param {string} lessonId - Lesson identifier
-   */
-  renderLesson(lessonId) {
-    // Cleanup previous component
+  renderLessonsGrid(lessons, completedLessons) {
+    if (lessons.length === 0) {
+      return '<p style="text-align: center; color: #666; padding: 2rem;">No lessons found.</p>';
+    }
+    
+    return lessons.map((lesson) => {
+      const isCompleted = completedLessons.includes(lesson.id);
+      
+      return `
+        <div class="lesson-card" data-lesson-id="${lesson.id}">
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div style="flex: 1;">
+              <h3>
+                ${isCompleted ? '<span class="check-icon">✓</span>' : ''}
+                Lesson ${lesson.id}: ${lesson.title}
+              </h3>
+              <p>${lesson.description}</p>
+              
+              <div class="lesson-meta">
+                <span class="time">⏱ ${lesson.duration}</span>
+                <span class="tag ${lesson.difficulty}">${lesson.difficulty}</span>
+                ${lesson.topics ? lesson.topics.map(t => `<span class="tag category">${t}</span>`).join('') : ''}
+              </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 1rem; margin-left: 2rem;">
+              <span class="bookmark-icon">🔖</span>
+              <a href="#/lesson/${lesson.id}" class="btn-study">
+                📚 Study
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  setupSearch() {
+    const searchInput = qs('#lesson-search');
+    const categoryFilter = qs('#category-filter');
+    const difficultyFilter = qs('#difficulty-filter');
+    const container = qs('#lessons-container');
+
+    if (!searchInput || !container) return;
+
+    const performSearch = debounce(async (query) => {
+      try {
+        container.innerHTML = LoadingSpinner({ text: 'Searching...' }).render();
+        
+        const response = await api.searchLessons(query);
+        let filteredLessons = response.data;
+        
+        const selectedCategory = categoryFilter?.value;
+        const selectedDifficulty = difficultyFilter?.value;
+        
+        if (selectedCategory && selectedCategory !== 'All') {
+          filteredLessons = filteredLessons.filter(l => 
+            l.topics?.some(t => t.toLowerCase().includes(selectedCategory.toLowerCase()))
+          );
+        }
+        
+        if (selectedDifficulty && selectedDifficulty !== 'All') {
+          filteredLessons = filteredLessons.filter(l => 
+            l.difficulty.toLowerCase() === selectedDifficulty.toLowerCase()
+          );
+        }
+        
+        const completedLessons = store.get('completedLessons') || [];
+        container.innerHTML = this.renderLessonsGrid(filteredLessons, completedLessons);
+        
+      } catch (error) {
+        console.error('Search failed:', error);
+        const errorMsg = ErrorMessage({
+          title: 'Search Failed',
+          message: 'Unable to search lessons. Please try again.',
+          type: 'error',
+          retry: () => performSearch(query)
+        });
+        container.innerHTML = errorMsg.render();
+      }
+    }, 400);
+
+    searchInput.addEventListener('input', (e) => {
+      performSearch(e.target.value);
+    });
+
+    if (categoryFilter) {
+      categoryFilter.addEventListener('change', () => {
+        performSearch(searchInput.value);
+      });
+    }
+
+    if (difficultyFilter) {
+      difficultyFilter.addEventListener('change', () => {
+        performSearch(searchInput.value);
+      });
+    }
+  }
+
+  async renderLessonAsync(lessonId) {
+    const { createLesson } = await this.loadLessonModule();
+    
     if (this.currentComponent?.destroy) {
       this.currentComponent.destroy();
     }
 
-    const lesson = createLesson(lessonId);
-    
-    if (!lesson) {
+    this.container.innerHTML = LoadingSpinner({ 
+      size: 'large', 
+      text: 'Loading lesson...' 
+    }).render();
+
+    try {
+      const response = await api.getLessonById(lessonId);
+      const lessonData = response.data;
+      
       this.container.innerHTML = `
-        <div class="error-message">
-          <h2>Lesson Not Found</h2>
-          <p>The lesson you're looking for doesn't exist.</p>
-          <a href="#/" class="btn">Back to Home</a>
+        <div style="max-width: 800px; margin: 0 auto;">
+          <div class="breadcrumb">
+            <a href="#/">Home</a> / <a href="#/lessons">Lessons</a> / ${lessonData.title}
+          </div>
+          
+          <article class="lesson-content">
+            <header>
+              <h1>${lessonData.title}</h1>
+              <div class="lesson-meta">
+                <span class="time">⏱ ${lessonData.duration}</span>
+                <span class="tag ${lessonData.difficulty}">${lessonData.difficulty}</span>
+              </div>
+            </header>
+            
+            <div class="content">
+              <p>${lessonData.content}</p>
+              
+              ${lessonData.topics ? `
+                <div style="margin-top: 2rem;">
+                  <h3>Topics Covered:</h3>
+                  <ul>
+                    ${lessonData.topics.map(topic => `<li>${topic}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+            </div>
+            
+            <footer style="margin-top: 3rem; display: flex; justify-content: space-between;">
+              <button class="btn btn-secondary" onclick="window.history.back()">← Back</button>
+              <button class="btn btn-primary" id="complete-lesson-btn">
+                Complete Lesson ✓
+              </button>
+            </footer>
+          </article>
         </div>
       `;
-      return;
+      
+      const completeBtn = qs('#complete-lesson-btn');
+      if (completeBtn) {
+        completeBtn.addEventListener('click', async () => {
+          await this.completeLesson(lessonId);
+          showErrorToast('Lesson completed! 🎉', 3000);
+          window.location.hash = '#/lessons';
+        });
+      }
+      
+    } catch (error) {
+      console.error('Failed to load lesson:', error);
+      
+      if (error.status === 404) {
+        const errorMsg = ErrorMessage({
+          title: 'Lesson Not Found',
+          message: 'The lesson you are looking for does not exist.',
+          type: 'warning',
+          dismiss: () => window.location.hash = '#/lessons'
+        });
+        errorMsg.show(this.container);
+      } else {
+        const errorMsg = showNetworkError(() => this.renderLessonAsync(lessonId));
+        errorMsg.show(this.container);
+      }
     }
+  }
 
-    lesson.render(this.container);
-    this.currentComponent = lesson;
+  async completeLesson(lessonId) {
+    const completedLessons = store.get('completedLessons') || [];
+    
+    if (!completedLessons.includes(lessonId)) {
+      completedLessons.push(lessonId);
+      store.setState({ completedLessons });
+      
+      const progress = Math.round((completedLessons.length / this.lessons.length) * 100);
+      store.setState({ progress });
+      
+      await dbManager.saveProgress({
+        id: 'current-progress',
+        completedLessons,
+        progress,
+        lastUpdated: Date.now()
+      });
+      
+      await api.saveProgress({ completedLessons, progress });
+    }
   }
 
   /**
    * Render quiz
    * @param {string} quizId - Quiz identifier
    */
-  renderQuiz(quizId) {
+  async renderQuiz(quizId) {
+    const { createQuiz } = await this.loadQuizModule();
+    
     // Cleanup previous component
     if (this.currentComponent?.destroy) {
       this.currentComponent.destroy();
@@ -255,7 +468,9 @@ class App {
   /**
    * Render progress page
    */
-  renderProgress() {
+  async renderProgress() {
+    const { createProgress } = await this.loadProgressModule();
+    
     // Cleanup previous component
     if (this.currentComponent?.destroy) {
       this.currentComponent.destroy();
@@ -266,22 +481,23 @@ class App {
     this.currentComponent = progress;
   }
 
-  /**
-   * Subscribe to state changes
-   */
   subscribeToState() {
-    store.subscribe('app', (oldState, newState) => {
-      // Save state to localStorage
+    store.subscribe('app', async (oldState, newState) => {
       this.saveState();
       
-      // Log state changes in development
+      if (newState.completedLessons !== oldState.completedLessons) {
+        await dbManager.saveProgress({
+          id: 'current-progress',
+          completedLessons: newState.completedLessons,
+          progress: newState.progress,
+          lastUpdated: Date.now()
+        });
+      }
+      
       console.log('State updated:', { oldState, newState });
     });
   }
 
-  /**
-   * Load state from localStorage
-   */
   loadState() {
     try {
       const savedState = localStorage.getItem('microLearningState');
@@ -295,9 +511,6 @@ class App {
     }
   }
 
-  /**
-   * Save state to localStorage
-   */
   saveState() {
     try {
       const state = store.getState();
@@ -308,16 +521,14 @@ class App {
   }
 }
 
-// Initialize app when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     const app = new App();
-    app.init();
+    await app.init();
   });
 } else {
   const app = new App();
   app.init();
 }
 
-// Export for testing
 export { App };

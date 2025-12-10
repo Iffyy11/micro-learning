@@ -58,5 +58,46 @@ export function sanitizeHTML(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;');
+}
+
+/**
+ * Validate URL to prevent javascript: and data: schemes
+ * @param {string} url - URL to validate
+ * @returns {boolean} Whether URL is safe
+ */
+export function validateURL(url) {
+  if (typeof url !== 'string') return false;
+  const normalized = url.trim().toLowerCase();
+  // Block dangerous protocols
+  const dangerousProtocols = ['javascript:', 'data:', 'vbscript:', 'file:'];
+  return !dangerousProtocols.some(proto => normalized.startsWith(proto));
+}
+
+/**
+ * Sanitize user input for safe display
+ * @param {string} input - User input
+ * @param {number} maxLength - Maximum allowed length
+ * @returns {string} Sanitized input
+ */
+export function sanitizeInput(input, maxLength = 1000) {
+  if (typeof input !== 'string') return '';
+  // Trim and limit length
+  let sanitized = input.trim().slice(0, maxLength);
+  // Remove any control characters
+  sanitized = sanitized.replace(/[\x00-\x1F\x7F]/g, '');
+  return sanitizeHTML(sanitized);
+}
+
+/**
+ * Validate quiz answer index
+ * @param {number} answerIndex - Answer index
+ * @param {number} maxOptions - Maximum number of options
+ * @returns {boolean} Whether answer index is valid
+ */
+export function validateAnswerIndex(answerIndex, maxOptions = 4) {
+  return Number.isInteger(answerIndex) && 
+         answerIndex >= 0 && 
+         answerIndex < maxOptions;
 }

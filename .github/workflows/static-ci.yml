@@ -16,15 +16,15 @@ jobs:
 
       - name: Validate HTML exists
         run: |
-          test -f index.html || (echo "index.html missing" && exit 1)
+          test -f docs/index.html || (echo "docs/index.html missing" && exit 1)
 
-      - name: Validate JS loads
+      - name: Validate JS folder exists
         run: |
-          echo "JS structure OK"
+          test -d docs/js || (echo "docs/js missing" && exit 1)
 
-      - name: Validate CSS loads
+      - name: Validate CSS folder exists
         run: |
-          echo "CSS structure OK"
+          test -d docs/css || (echo "docs/css missing" && exit 1)
 
-      - name: Build summary
+      - name: Build Summary
         run: echo "Static site verified ✔"

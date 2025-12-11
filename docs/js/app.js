@@ -182,23 +182,23 @@ class App {
 
       <section style="margin-top: 3rem;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
-          <div class="card">
+          <a href="#/lessons" class="card" style="cursor: pointer;">
             <div style="font-size: 2.5rem; margin-bottom: 1rem;">📖</div>
             <h3>Quick Lessons</h3>
             <p>Complete focused lessons in just 5-10 minutes</p>
-          </div>
+          </a>
 
-          <div class="card">
+          <a href="#/progress" class="card" style="cursor: pointer;">
             <div style="font-size: 2.5rem; margin-bottom: 1rem;">📈</div>
             <h3>Track Progress</h3>
             <p>Monitor your learning journey with detailed stats</p>
-          </div>
+          </a>
 
-          <div class="card">
+          <a href="#/quiz" class="card" style="cursor: pointer;">
             <div style="font-size: 2.5rem; margin-bottom: 1rem;">🏆</div>
             <h3>Test Knowledge</h3>
             <p>Reinforce learning with quick quizzes</p>
-          </div>
+          </a>
         </div>
       </section>
     `;

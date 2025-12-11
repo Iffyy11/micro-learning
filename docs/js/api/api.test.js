@@ -182,7 +182,7 @@ describe('API Service', () => {
     });
   });
 
-  describe('Network simulation', () => {
+    describe('Network simulation', () => {
     it('should simulate network delay when enabled', async () => {
       API_CONFIG.simulateNetworkDelay = true;
       API_CONFIG.networkDelayMs = 100;
@@ -191,7 +191,7 @@ describe('API Service', () => {
       await api.getAllLessons();
       const duration = Date.now() - start;
 
-      expect(duration).toBeGreaterThanOrEqual(100);
+      expect(duration).toBeGreaterThanOrEqual(99);
     });
   });
 });

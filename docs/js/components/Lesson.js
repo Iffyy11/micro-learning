@@ -5,6 +5,7 @@
 
 import { store, stateUtils } from '../store/state.js';
 import { router } from '../router/router.js';
+import { sanitizeHTML, sanitizeInput } from '../utils/validation.js';
 
 /**
  * Lesson data repository
@@ -91,18 +92,20 @@ export function createLesson(lessonId) {
     render(container) {
       if (!container) return;
       
+      // sanitize content strings before rendering
+      const safeIntro = sanitizeHTML(lesson.content.intro || '');
       container.innerHTML = `
         <article class="lesson">
           <h1 class="lesson-title">Lesson ${lesson.id} — ${lesson.title}</h1>
           
           <section class="lesson-content">
-            <p class="lesson-intro">${lesson.content.intro}</p>
+            <p class="lesson-intro">${safeIntro}</p>
             
             ${lesson.content.sections.map(section => `
               <div class="lesson-section">
-                <h3>${section.title}</h3>
+                <h3>${sanitizeHTML(section.title)}</h3>
                 <ul>
-                  ${section.points.map(point => `<li>${point}</li>`).join('')}
+                  ${section.points.map(point => `<li>${sanitizeHTML(point)}</li>`).join('')}
                 </ul>
               </div>
             `).join('')}

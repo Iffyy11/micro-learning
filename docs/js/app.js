@@ -7,6 +7,7 @@ import { dbManager } from './storage/indexedDB.js';
 import { LoadingSpinner, showLoadingOverlay, hideLoadingOverlay } from './components/LoadingSpinner.js';
 import { ErrorMessage, showErrorToast, showNetworkError } from './components/ErrorMessage.js';
 import { debounce } from './utils/debounce.js';
+import { sanitizeHTML, sanitizeInput, validateLessonId } from './utils/validation.js';
 
 // Lazy-loaded modules (loaded on demand)
 let LessonModule = null;
@@ -19,6 +20,43 @@ class App {
     this.currentComponent = null;
     this.lessons = [];
     this.isOnline = navigator.onLine;
+  }
+
+  renderCategoryHighlights(lessons = []) {
+    if (!Array.isArray(lessons) || lessons.length === 0) return '';
+
+    // Group lessons by topic (topics is an array on each lesson)
+    const map = {};
+    lessons.forEach(lesson => {
+      const topics = Array.isArray(lesson.topics) ? lesson.topics : (lesson.topic ? [lesson.topic] : []);
+      topics.forEach(t => {
+        const key = sanitizeHTML(String(t || 'Misc'));
+        if (!map[key]) map[key] = [];
+        map[key].push(lesson);
+      });
+    });
+
+    // Render top categories (limit to 6) and up to 3 items per category
+    return Object.keys(map).slice(0, 6).map(cat => {
+      const items = map[cat].slice(0, 3).map(l => {
+        const safeId = sanitizeInput(String(l.id), 10);
+        const safeTitle = sanitizeHTML(l.title || 'Untitled');
+        const safeDesc = sanitizeHTML(l.description || '');
+        return `
+            <a class="card" href="#/lesson/${safeId}">
+              <h3>${safeTitle}</h3>
+              <p>${safeDesc}</p>
+            </a>`;
+      }).join('');
+
+      return `
+        <section style="margin-top:2rem;">
+          <h3>${sanitizeHTML(cat)}</h3>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1rem; margin-top:1rem;">
+            ${items}
+          </div>
+        </section>`;
+    }).join('');
   }
 
   // Lazy load modules on demand for performance
@@ -45,54 +83,39 @@ class App {
 
   async init() {
     console.log('🚀 Initializing Micro-Learning Portal...');
-    
-    this.container = qs('#app-content') || qs('main');
-    
-    if (!this.container) {
-      console.error('No app container found');
-      return;
-    }
-
-    showLoadingOverlay('Initializing app...');
-
     try {
+      // Initialize local database (if supported)
       await dbManager.init();
-      console.log('✓ IndexedDB initialized');
-      
-      await this.loadLessons();
-      
-      this.initRoutes();
-      this.loadState();
-      this.subscribeToState();
-      this.setupNetworkListeners();
-      
-      console.log('✓ Application initialized');
-      
-    } catch (error) {
-      console.error('Failed to initialize app:', error);
-      showErrorToast('Failed to initialize application');
-    } finally {
-      hideLoadingOverlay();
-    }
-  }
 
-  async loadLessons() {
-    try {
+      // Load cached lessons from IndexedDB first for quick startup
       const cachedLessons = await dbManager.getLessons();
-      
       if (cachedLessons && cachedLessons.length > 0) {
         this.lessons = cachedLessons;
         console.log('✓ Loaded lessons from IndexedDB cache');
       }
-      
+
+      // If online, fetch fresh lessons and update cache
       if (this.isOnline) {
         const response = await api.getAllLessons();
-        this.lessons = response.data;
-        await dbManager.saveLessons(this.lessons);
-        console.log('✓ Fetched fresh lessons from API');
+        if (response && Array.isArray(response.data)) {
+          this.lessons = response.data;
+          await dbManager.saveLessons(this.lessons);
+          console.log('✓ Fetched fresh lessons from API');
+        }
       }
-      
+
       store.setState({ lessons: this.lessons });
+      // Set main container reference for rendering
+      this.container = qs('#app-content') || qs('#main') || document.body;
+
+      // Initialize router, network listeners and state subscriptions
+      this.initRoutes();
+      this.setupNetworkListeners();
+      this.subscribeToState();
+      this.loadState();
+
+      // Trigger router to render current route (or home)
+      router.handleRouteChange();
     } catch (error) {
       console.error('Failed to load lessons:', error);
       if (this.lessons.length === 0) {
@@ -187,24 +210,26 @@ class App {
     const completedLessons = store.get('completedLessons') || [];
     
     this.container.innerHTML = `
-      <div style="max-width: 900px; margin: 0 auto;">
+      <div style="max-width: 1100px; margin: 0 auto;">
         <h1>Lessons</h1>
-        
+
         <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-top: 2rem;">
           <h2 style="margin-top: 0;">All Lessons</h2>
-          
-          <div style="margin: 1.5rem 0;">
-            <input 
-              type="text" 
-              id="lesson-search" 
-              placeholder="🔍 Search lessons..." 
-              class="search-input" 
-              style="margin-bottom: 1rem;"
-              aria-label="Search lessons">
-            
+
+          <div class="filter-bar">
             <div class="filter-group">
-              <div>
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Category</label>
+              <div class="filter-item filter-search">
+                <label for="lesson-search" class="filter-label">Search Lessons</label>
+                <input
+                  type="text"
+                  id="lesson-search"
+                  placeholder="Search by title, topic or description"
+                  class="search-input"
+                  aria-label="Search lessons">
+              </div>
+
+              <div class="filter-item">
+                <label for="category-filter" class="filter-label">Category</label>
                 <select class="filter-select" id="category-filter">
                   <option>All</option>
                   <option>Performance</option>
@@ -212,9 +237,9 @@ class App {
                   <option>Infrastructure</option>
                 </select>
               </div>
-              
-              <div>
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Difficulty</label>
+
+              <div class="filter-item">
+                <label for="difficulty-filter" class="filter-label">Difficulty</label>
                 <select class="filter-select" id="difficulty-filter">
                   <option>All</option>
                   <option>beginner</option>
@@ -224,10 +249,49 @@ class App {
               </div>
             </div>
           </div>
-          
+
           <div id="lessons-container">
             ${this.renderLessonsGrid(lessons, completedLessons)}
           </div>
+
+          ${this.renderCategoryHighlights(lessons)}
+
+          <section style="margin-top:2rem;">
+            <h3>Database</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1rem; margin-top:1rem;">
+              <a class="card" href="#/lesson/db-1">
+                <h3>Intro to Indexing</h3>
+                <p>Learn how indexes speed up queries and when to use them.</p>
+              </a>
+              <a class="card" href="#/lesson/db-2">
+                <h3>Transactions</h3>
+                <p>Understand ACID properties and how to safely update multiple records.</p>
+              </a>
+              <a class="card" href="#/lesson/db-3">
+                <h3>Connection Pooling</h3>
+                <p>Manage database connections efficiently to improve throughput.</p>
+              </a>
+            </div>
+          </section>
+
+          <section style="margin-top:2rem;">
+            <h3>Infrastructure</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1rem; margin-top:1rem;">
+              <a class="card" href="#/lesson/infra-1">
+                <h3>CI/CD Basics</h3>
+                <p>Automate builds and deployments to ship changes safely and quickly.</p>
+              </a>
+              <a class="card" href="#/lesson/infra-2">
+                <h3>Monitoring & Alerts</h3>
+                <p>Set up observability to detect and resolve issues faster.</p>
+              </a>
+              <a class="card" href="#/lesson/infra-3">
+                <h3>Scaling Strategies</h3>
+                <p>Learn horizontal vs vertical scaling and how to scale stateful services.</p>
+              </a>
+            </div>
+          </section>
+
         </div>
       </div>
     `;
@@ -243,26 +307,34 @@ class App {
     return lessons.map((lesson) => {
       const isCompleted = completedLessons.includes(lesson.id);
       
+      // sanitize fields from API or external sources before inserting into DOM
+      const safeId = sanitizeInput(String(lesson.id), 10);
+      const safeTitle = sanitizeHTML(lesson.title || 'Untitled');
+      const safeDescription = sanitizeHTML(lesson.description || '');
+      const safeDuration = sanitizeHTML(lesson.duration || '');
+      const safeDifficulty = sanitizeHTML(lesson.difficulty || '');
+      const safeTopics = Array.isArray(lesson.topics) ? lesson.topics.map(t => sanitizeHTML(String(t))) : [];
+
       return `
         <div class="lesson-card" data-lesson-id="${lesson.id}">
           <div style="display: flex; justify-content: space-between; align-items: start;">
             <div style="flex: 1;">
               <h3>
                 ${isCompleted ? '<span class="check-icon">✓</span>' : ''}
-                Lesson ${lesson.id}: ${lesson.title}
+                Lesson ${safeId}: ${safeTitle}
               </h3>
-              <p>${lesson.description}</p>
+              <p>${safeDescription}</p>
               
               <div class="lesson-meta">
-                <span class="time">⏱ ${lesson.duration}</span>
-                <span class="tag ${lesson.difficulty}">${lesson.difficulty}</span>
-                ${lesson.topics ? lesson.topics.map(t => `<span class="tag category">${t}</span>`).join('') : ''}
+                <span class="time">⏱ ${safeDuration}</span>
+                <span class="tag ${safeDifficulty}">${safeDifficulty}</span>
+                ${safeTopics.length ? safeTopics.map(t => `<span class="tag category">${t}</span>`).join('') : ''}
               </div>
             </div>
             
             <div style="display: flex; align-items: center; gap: 1rem; margin-left: 2rem;">
               <span class="bookmark-icon">🔖</span>
-              <a href="#/lesson/${lesson.id}" class="btn-study">
+              <a href="#/lesson/${sanitizeInput(String(lesson.id))}" class="btn-study">
                 📚 Study
               </a>
             </div>
@@ -277,6 +349,28 @@ class App {
     const categoryFilter = qs('#category-filter');
     const difficultyFilter = qs('#difficulty-filter');
     const container = qs('#lessons-container');
+
+    // Populate category filter from available lesson topics so options match data
+    if (categoryFilter) {
+      // Build a unique sorted list of topics from lessons
+      const topics = new Set();
+      (this.lessons || []).forEach(l => {
+        (l.topics || []).forEach(t => {
+          if (t && String(t).trim()) topics.add(String(t).toLowerCase());
+        });
+      });
+
+      // If no topics found, leave the default options as-is
+      if (topics.size > 0) {
+        const opts = ['All', ...Array.from(topics).sort()];
+        categoryFilter.innerHTML = opts.map(o => {
+          if (o === 'All') return `<option value="All">All</option>`;
+          // Capitalize label but keep value lowercase for matching
+          const label = o.charAt(0).toUpperCase() + o.slice(1);
+          return `<option value="${o}">${label}</option>`;
+        }).join('');
+      }
+    }
 
     if (!searchInput || !container) return;
 
@@ -349,37 +443,43 @@ class App {
     try {
       const response = await api.getLessonById(lessonId);
       const lessonData = response.data;
-      
+      // sanitize lesson data from API
+      const safeTitle = sanitizeHTML(lessonData.title || 'Untitled');
+      const safeContent = sanitizeHTML(lessonData.content || '');
+      const safeDuration = sanitizeHTML(lessonData.duration || '');
+      const safeDifficulty = sanitizeHTML(lessonData.difficulty || '');
+      const safeTopics = Array.isArray(lessonData.topics) ? lessonData.topics.map(t => sanitizeHTML(String(t))) : [];
+
       this.container.innerHTML = `
         <div style="max-width: 800px; margin: 0 auto;">
           <div class="breadcrumb">
-            <a href="#/">Home</a> / <a href="#/lessons">Lessons</a> / ${lessonData.title}
+            <a href="#/">Home</a> / <a href="#/lessons">Lessons</a> / ${safeTitle}
           </div>
           
           <article class="lesson-content">
             <header>
-              <h1>${lessonData.title}</h1>
+              <h1>${safeTitle}</h1>
               <div class="lesson-meta">
-                <span class="time">⏱ ${lessonData.duration}</span>
-                <span class="tag ${lessonData.difficulty}">${lessonData.difficulty}</span>
+                <span class="time">⏱ ${safeDuration}</span>
+                <span class="tag ${safeDifficulty}">${safeDifficulty}</span>
               </div>
             </header>
             
             <div class="content">
-              <p>${lessonData.content}</p>
+              <p>${safeContent}</p>
               
-              ${lessonData.topics ? `
+              ${safeTopics.length ? `
                 <div style="margin-top: 2rem;">
                   <h3>Topics Covered:</h3>
                   <ul>
-                    ${lessonData.topics.map(topic => `<li>${topic}</li>`).join('')}
+                    ${safeTopics.map(topic => `<li>${topic}</li>`).join('')}
                   </ul>
                 </div>
               ` : ''}
             </div>
             
             <footer style="margin-top: 3rem; display: flex; justify-content: space-between;">
-              <button class="btn btn-secondary" onclick="window.history.back()">← Back</button>
+              <button class="btn btn-secondary" id="back-btn">← Back</button>
               <button class="btn btn-primary" id="complete-lesson-btn">
                 Complete Lesson ✓
               </button>
@@ -388,12 +488,21 @@ class App {
         </div>
       `;
       
+      // Back button must use JS listener (avoid inline onclick because of CSP)
+      const backBtn = qs('#back-btn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          // use router navigation to go back to lessons
+          router.navigate(routes.LESSONS);
+        });
+      }
+
       const completeBtn = qs('#complete-lesson-btn');
       if (completeBtn) {
         completeBtn.addEventListener('click', async () => {
           await this.completeLesson(lessonId);
           showErrorToast('Lesson completed! 🎉', 3000);
-          window.location.hash = '#/lessons';
+          router.navigate(routes.LESSONS);
         });
       }
       

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="theme-warm">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,13 +7,20 @@
   <link rel="stylesheet" href="../css/tokens.css">
   <link rel="stylesheet" href="../css/base.css">
 </head>
-<body>
+<body class="theme-warm">
 
 <a class="skip-link" href="#main">Skip to main content</a>
 
 <header class="site-header">
   <div class="container header-inner">
     <h1 class="logo">Micro-Larning Portal</h1>
+    <div style="margin-left:auto">
+      <div class="theme-toggle" role="toolbar" aria-label="Theme switcher">
+        <button data-theme="theme-default" aria-pressed="false" title="Default">☀️</button>
+        <button data-theme="theme-warm" aria-pressed="true" title="Warm">🔥</button>
+        <button data-theme="theme-wireframe" aria-pressed="false" title="Wireframe">🎨</button>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -84,6 +91,7 @@
   </div>
 </footer>
 
+<script src="../js/theme.js" defer></script>
 <script src="../js/a11y.js" defer></script>
 </body>
 </html>

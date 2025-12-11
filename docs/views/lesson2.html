@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" class="theme-warm">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Lesson 2 — (Placeholder)</title>
+	<link rel="stylesheet" href="../css/tokens.css">
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/figma-design.css">
+</head>
+<body class="theme-warm">
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+	<div class="container header-inner">
+		<h1 class="logo">Micro-Learning Portal</h1>
+	</div>
+</header>
+
+<nav class="primary-nav" aria-label="Primary navigation">
+	<ul class="nav-list">
+		<li><a href="../index.html">Home</a></li>
+		<li><a href="lesson2.html" aria-current="page">Lessons</a></li>
+		<li><a href="form.html">Progress</a></li>
+	</ul>
+</nav>
+
+<main id="main" class="main-content container" tabindex="-1">
+	<article class="lesson">
+		<h1 class="lesson-title">Lesson 2 — ES Modules & Imports</h1>
+		<section class="lesson-content">
+			<h2>What are ES Modules?</h2>
+			<p>ES Modules let you split your code into smaller, reusable files. Use <code>export</code> to expose values and <code>import</code> to consume them.</p>
+
+			<h3>Named vs default exports</h3>
+			<ul>
+				<li><strong>Named export:</strong> <code>export function add() {}</code> — imported with <code>import { add } from './math.js'</code></li>
+				<li><strong>Default export:</strong> <code>export default class Widget {}</code> — imported with <code>import Widget from './widget.js'</code></li>
+			</ul>
+
+			<h3>Quick examples</h3>
+			<pre><code>// math.js
+export function add(a, b) { return a + b; }
+
+// main.js
+import { add } from './math.js';
+console.log(add(2, 3));
+</code></pre>
+
+			<h3>Why modules help</h3>
+			<p>Modules improve organization, make testing easier, and help tools like bundlers and tree-shakers remove unused code.</p>
+		</section>
+		<div class="lesson-nav">
+			<a class="btn" href="lesson1.html">Previous</a>
+			<a class="btn" href="../index.html">Home</a>
+		</div>
+	</article>
+</main>
+
+<footer class="site-footer">
+	<div class="container">
+		<p>© 2025 Micro-Learning Portal</p>
+	</div>
+</footer>
+
+<script src="../js/a11y.js" defer></script>
+</body>
+</html>

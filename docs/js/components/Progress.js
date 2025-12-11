@@ -59,7 +59,7 @@ export function createProgress() {
             <div class="progress-bar-section">
               <h3>Overall Progress</h3>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span style="color: var(--clr-muted);">Learning Journey</span>
+                <span style="color: var(--clr-text);">Learning Journey</span>
                 <span style="font-weight: 600;">${completedLessons.length} of ${totalLessons} lessons completed</span>
               </div>
               <div class="progress-bar-container">
@@ -119,7 +119,7 @@ export function createProgress() {
       return `
         <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-top: 2rem;">
           <h2>Your Achievements</h2>
-          <p style="color: var(--clr-muted); margin-bottom: 1rem;">Unlocked ${unlockedAchievements.length} of ${achievements.length} achievements</p>
+          <p style="color: var(--clr-text); margin-bottom: 1rem;">Unlocked ${unlockedAchievements.length} of ${achievements.length} achievements</p>
           
           <div style="background: #E5E7EB; height: 12px; border-radius: 20px; overflow: hidden; margin-bottom: 2rem;">
             <div style="background: linear-gradient(90deg, var(--clr-accent), var(--clr-purple)); height: 100%; width: ${(unlockedAchievements.length / achievements.length) * 100}%; border-radius: 20px;"></div>
@@ -133,23 +133,23 @@ export function createProgress() {
                   <div class="achievement-icon">${achievement.icon}</div>
                   <h3>${achievement.title} ${earned ? achievement.emoji : ''}</h3>
                   <p>${achievement.desc}</p>
-                  ${earned ? '<div class="unlock-badge">Unlocked ✓</div>' : `<div style="margin-top: 1rem; color: var(--clr-muted); font-size: 0.85rem;">Progress ${index === 1 ? completedCount + '/5' : '...'}</div>`}
+                  ${earned ? '<div class="unlock-badge">Unlocked ✓</div>' : `<div style="margin-top: 1rem; color: var(--clr-text); font-size: 0.85rem;">Progress ${index === 1 ? completedCount + '/5' : '...'}</div>`}
                 </div>
               `;
             }).join('')}
           </div>
           
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem;">
-            <div style="background: linear-gradient(135deg, var(--clr-purple), #BA68C8); padding: 2rem; border-radius: 16px; color: white;">
-              <h3 style="margin: 0 0 1rem; font-size: 1.125rem; opacity: 0.9;">Total Points</h3>
-              <div style="font-size: 3rem; font-weight: 700;">100</div>
-              <p style="margin: 0.5rem 0 0; opacity: 0.85;">Keep learning to earn more points!</p>
+            <div class="points-card" style="background: linear-gradient(135deg, var(--clr-purple), #BA68C8); padding: 2rem; border-radius: 16px;">
+              <h3 class="points-card-title" style="margin: 0 0 1rem; font-size: 1.125rem; opacity: 0.95;">Total Points</h3>
+              <div class="points-card-value" style="font-size: 3rem; font-weight: 700;">100</div>
+              <p class="points-card-desc" style="margin: 0.5rem 0 0; opacity: 0.95;">Keep learning to earn more points!</p>
             </div>
-            
-            <div style="background: linear-gradient(135deg, var(--clr-orange), var(--clr-orange-light)); padding: 2rem; border-radius: 16px; color: white;">
-              <h3 style="margin: 0 0 1rem; font-size: 1.125rem; opacity: 0.9;">Current Streak 🔥</h3>
-              <div style="font-size: 3rem; font-weight: 700;">7</div>
-              <p style="margin: 0.5rem 0 0; opacity: 0.85;">Days in a row</p>
+
+            <div class="streak-card" style="background: linear-gradient(135deg, var(--clr-orange), var(--clr-orange-light)); padding: 2rem; border-radius: 16px;">
+              <h3 class="streak-card-title" style="margin: 0 0 1rem; font-size: 1.125rem; opacity: 0.95;">Current Streak 🔥</h3>
+              <div class="streak-card-value" style="font-size: 3rem; font-weight: 700;">7</div>
+              <p class="streak-card-desc" style="margin: 0.5rem 0 0; opacity: 0.95;">Days in a row</p>
             </div>
           </div>
         </div>

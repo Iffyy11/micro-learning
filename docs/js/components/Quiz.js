@@ -4,7 +4,7 @@
  */
 
 import { store, stateUtils } from '../store/state.js';
-import { validateAnswer } from '../utils/validation.js';
+import { validateAnswer, sanitizeHTML } from '../utils/validation.js';
 
 /**
  * Quiz data repository
@@ -73,7 +73,7 @@ export function createQuiz(quizId) {
       
       container.innerHTML = `
         <div class="quiz-container">
-          <h1>${quiz.title}</h1>
+          <h1>${sanitizeHTML(quiz.title)}</h1>
           <p class="helper-text">Use Tab to move between options. Select with Space or Enter.</p>
           
           <form class="quiz-form" id="quiz-form">
@@ -98,7 +98,7 @@ export function createQuiz(quizId) {
     renderQuestion(question, index) {
       return `
         <fieldset class="quiz-fieldset">
-          <legend class="question-title">Q${index + 1}: ${question.text}</legend>
+          <legend class="question-title">Q${index + 1}: ${sanitizeHTML(question.text)}</legend>
           
           ${question.options.map(option => `
             <div class="form-group">
@@ -109,7 +109,7 @@ export function createQuiz(quizId) {
                 value="${option.value}"
                 ${answers[question.id] === option.value ? 'checked' : ''}
               >
-              <label for="${question.id}-${option.value}">${option.text}</label>
+              <label for="${question.id}-${option.value}">${sanitizeHTML(option.text)}</label>
             </div>
           `).join('')}
         </fieldset>

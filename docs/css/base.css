@@ -30,8 +30,8 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   color: var(--clr-text);
-  background: linear-gradient(180deg, #FAFAFA 0%, #F5F5F7 100%);
-  line-height: 1.5;
+  background: #FAFAFA;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -69,13 +69,14 @@ body {
 
 /* ---------- Header & Nav ---------- */
 .site-header {
-  border-bottom: 1px solid rgba(15,23,36,0.06);
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(15,23,36,0.08);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 .header-inner {
   display: flex;
@@ -85,8 +86,9 @@ body {
 }
 .logo {
   margin: 0;
-  font-size: var(--type-xl);
-  font-weight: 700;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -98,10 +100,16 @@ body {
   align-items: center;
   gap: var(--space-2xs);
   background: transparent;
-  border: 1px solid transparent;
+  border: 1px solid rgba(30, 126, 245, 0.2);
   padding: var(--space-2xs) var(--space-xs);
   border-radius: var(--radius-sm);
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-toggle:hover {
+  border-color: var(--clr-accent);
+  background: rgba(30, 126, 245, 0.05);
 }
 
 /* Primary nav */
@@ -174,7 +182,7 @@ body {
 
 /* ---------- Main grid ---------- */
 .main-content {
-  padding: var(--space-lg) 0;
+  padding: var(--space-2xl) 0;
 }
 
 /* Card grid (home) */
@@ -241,10 +249,26 @@ body {
   grid-template-columns: 1fr;
 }
 .lesson {
-  background: transparent;
+  background: linear-gradient(180deg, rgba(255,247,237,0.6), rgba(255,255,255,0.8));
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  color: var(--clr-text);
 }
-.lesson-title { margin-top: 0; font-size: var(--type-lg); }
+.lesson-title { margin-top: 0; font-size: var(--type-lg); color: var(--clr-text); }
+.lesson-content {
+  background: linear-gradient(180deg, rgba(255,247,237,0.9), rgba(255,255,255,0.95));
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  color: var(--clr-text);
+  box-shadow: var(--shadow-sm);
+}
+.lesson-content header h1 { color: var(--clr-text); }
 .lesson-content h2 { margin-bottom: var(--space-2xs); }
+
+/* Lesson navigation */
+.lesson-nav { display:flex; gap: 1rem; margin-top: 1.5rem; }
+.lesson-nav .btn { background: rgba(255,255,255,0.9); color: var(--clr-text); box-shadow: none; border: 1px solid rgba(0,0,0,0.04); }
+.lesson-nav .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .lesson-aside {
   background: var(--white);
   padding: var(--space-lg);
@@ -261,6 +285,33 @@ body {
 .form-group { margin-bottom: var(--space-md); display: flex; align-items: center; gap: var(--space-2xs); }
 .form-group input[type="radio"] { transform: scale(1.05); }
 .quiz-form .helper-text { color: var(--clr-muted); margin-bottom: var(--space-md); }
+
+/* Input styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 2px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  font-size: var(--type-scale);
+  font-family: var(--font-sans);
+  transition: all 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--clr-accent);
+  box-shadow: 0 0 0 3px rgba(30, 126, 245, 0.1);
+}
 .btn {
   display: inline-block;
   background: var(--gradient-primary);
@@ -269,43 +320,27 @@ body {
   border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   font-size: var(--type-scale);
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(30, 126, 245, 0.3);
   position: relative;
-  overflow: hidden;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.btn:hover::before {
-  width: 300px;
-  height: 300px;
+  letter-spacing: -0.01em;
+  z-index: 1;
 }
 
 .btn:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-accent);
+  box-shadow: 0 8px 24px rgba(30, 126, 245, 0.4);
 }
 
 .btn:active {
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 126, 245, 0.3);
 }
 
 .btn:focus-visible {
-  outline: 3px solid var(--clr-focus);
+  outline: 3px solid var(--white);
   outline-offset: 2px;
 }
 
@@ -321,6 +356,42 @@ body {
 
 /* ---------- Utility ---------- */
 .helper-text { font-size: 0.95rem; color: var(--clr-muted); }
+
+/* Filter bar for Lessons page */
+.filter-bar { margin: 1.5rem 0; }
+.filter-group {
+  display: flex;
+  gap: var(--space-md);
+  align-items: end;
+  flex-wrap: wrap;
+}
+.filter-item { min-width: 160px; display:flex; flex-direction:column; }
+.filter-item.filter-search { flex: 1 1 320px; min-width: 220px; }
+.filter-label { font-size: 0.95rem; color: var(--clr-text); font-weight: 700; margin-bottom: 0.35rem; }
+.filter-select {
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #E6E7EB;
+  background: var(--white);
+  font-weight: 600;
+  color: var(--clr-text);
+}
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #E6E7EB;
+  background: var(--white);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--clr-text);
+}
+.search-input::placeholder { color: rgba(0,0,0,0.45); font-weight: 500; }
+
+@media (max-width: 640px) {
+  .filter-group { align-items: stretch; }
+  .filter-item { width: 100%; }
+}
 
 /* ---------- New Module Styles for Upload 2 ---------- */
 
@@ -362,7 +433,8 @@ body {
 
 .progress-stat p {
   margin: 0;
-  color: var(--clr-muted);
+  color: var(--clr-text);
+  font-weight: 600;
 }
 
 .progress-bar-container {
@@ -1008,3 +1080,304 @@ a, button, .btn, .card, .achievement, .lesson-card {
   );
   background-size: 1000px 100%;
 }
+
+/* ---------- Unified Button System (overrides/conflict fixes) ---------- */
+/* Ensure overlays sit beneath text and hover doesn't hide content */
+.btn {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e6ef5 0%, #3b82f6 100%);
+  color: var(--white);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: var(--type-scale);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Keep the button label above any decorative overlay */
+.btn > span,
+.btn .label {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+}
+
+/* Decorative overlay — sits under text (z-index:1) */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0; /* top:0; right:0; bottom:0; left:0 */
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.28s cubic-bezier(0.2,0,0,1), opacity 0.2s ease;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+/* Hover/focus expands the overlay but the text remains visible above it */
+.btn:hover::before,
+.btn:focus::before {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(30, 126, 245, 0.25);
+}
+
+.btn:active { transform: translateY(-1px); }
+
+.btn:focus-visible { outline: 3px solid rgba(59,130,246,0.18); outline-offset: 3px; }
+
+/* Primary/Secondary variants */
+.btn-primary { background: linear-gradient(135deg, var(--clr-accent) 0%, var(--clr-accent-600) 100%); color: var(--white); }
+.btn-primary:active { box-shadow: 0 6px 18px rgba(30,126,245,0.18); }
+
+.btn-secondary { background: var(--white); color: var(--clr-text); border: 1px solid #E5E7EB; }
+.btn-secondary:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+
+/* Small responsive tweak */
+@media (max-width: 600px) {
+  .btn { padding: calc(var(--space-sm) - 2px) var(--space-md); font-size: 0.95rem; }
+}
+
+/* Specific override for study/start buttons used on home cards */
+.btn-study {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--clr-accent) 0%, var(--clr-accent-600) 100%);
+  color: var(--white);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn-study > span { position: relative; z-index: 2; }
+.btn-study::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); transform: scaleX(0); transform-origin: left center; transition: transform 0.28s cubic-bezier(0.2,0,0,1); z-index: 1; pointer-events: none; }
+.btn-study:hover::before { transform: scaleX(1); }
+.btn-study:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(30,126,245,0.22); }
+
+/* ---------- Typography & Spacing Refinements ---------- */
+html { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+/* Headings: clearer scale and spacing */
+h1, h2, h3, h4, h5 {
+  color: var(--clr-text);
+  margin-top: 0;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(1.5rem, 3.6vw, 2.5rem); }
+h2 { font-size: clamp(1.25rem, 2.6vw, 2rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.25rem); }
+
+p { margin: 0 0 var(--space-md) 0; color: var(--clr-muted); font-size: 1rem; }
+
+/* Make lesson card descriptions and metadata more visible */
+.lesson-card p { color: var(--clr-text); }
+.lesson-meta .time { color: var(--clr-text); background: rgba(0,0,0,0.03); }
+
+.container { width: 94%; max-width: 1200px; margin-left: auto; margin-right: auto; padding-left: 12px; padding-right: 12px; }
+
+/* Slightly more breathing on main content */
+.main-content { padding: calc(var(--space-2xl) + 8px) 0; }
+
+/* ---------- Warm Theme (site-wide friendly/approachable look) ---------- */
+/* Use `class="theme-warm"` on body or a wrapper to apply */
+.theme-warm {
+  --clr-accent: #D97706; /* warm amber */
+  --clr-accent-600: #B45309;
+  --clr-accent-light: #FFD8A8;
+  --gradient-primary: linear-gradient(135deg, #F59E0B 0%, #FB923C 100%);
+  --clr-accent-200: #FFEDD5;
+  --clr-surface: #FFF7ED;
+  --clr-blue-light: #FFEDD5;
+  --clr-text: #2B2B2B;
+}
+
+.theme-warm .btn-primary {
+  background: linear-gradient(135deg, #F59E0B 0%, #FB923C 100%);
+  color: #1F2937;
+  box-shadow: 0 10px 30px rgba(245,158,11,0.12);
+}
+.theme-warm .btn-primary:hover { box-shadow: 0 16px 44px rgba(245,158,11,0.18); transform: translateY(-3px); }
+.theme-warm .btn-secondary { background: #FFF7ED; border: 1px solid rgba(249, 115, 22, 0.08); color: #92400E; }
+.theme-warm .btn-study { background: linear-gradient(135deg, #FB923C, #F97316); color: #fff; }
+
+/* Warm page background helpers */
+.theme-warm body { background: linear-gradient(180deg, #FFFDF8 0%, #FFF7EE 100%); }
+.theme-warm .card, .theme-warm .lesson-card, .theme-warm .progress-stat { background: linear-gradient(180deg, #FFFFFF, #FFF7ED); border-color: rgba(249, 115, 22, 0.06); }
+
+/* Gentle rounded focus ring using warm tint */
+.theme-warm :focus { outline: 3px solid rgba(249,115,22,0.12); outline-offset: 3px; }
+
+/* ---------- Additional UI polish & micro-interactions ---------- */
+/* Theme toggle control (small pill with icons) */
+.theme-toggle {
+  display: inline-flex;
+  gap: 6px;
+  background: rgba(255,255,255,0.6);
+  padding: 4px;
+  border-radius: 999px;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(16,24,40,0.06);
+}
+
+/* Stronger warm-theme fallbacks to prevent conflicting theme rules from forcing dark backgrounds
+   These selectors increase specificity and ensure lesson content and core text colors are readable
+   when `.theme-warm` is present on the document. */
+html.theme-warm, body.theme-warm, .theme-warm {
+  --clr-text: #2B2B2B;
+  --clr-muted: #6B6B6B;
+  background: linear-gradient(180deg, #FFFDF8 0%, #FFF7EE 100%);
+  color: var(--clr-text);
+}
+
+.theme-warm .lesson,
+.theme-warm .lesson-content,
+.theme-warm .card,
+.theme-warm .lesson-card,
+.theme-warm .progress-stat {
+  background: linear-gradient(180deg, #FFFFFF, #FFF7ED);
+  color: var(--clr-text);
+}
+
+.theme-warm .lesson-content h1,
+.theme-warm .lesson-content h2,
+.theme-warm .lesson-content h3,
+.theme-warm .lesson-content p,
+.theme-warm .lesson-content li {
+  color: var(--clr-text);
+}
+
+/* If other theme rules still take precedence due to order, these utility classes
+   can be used as an emergency override: add `warm-force` to a container. */
+.warm-force .lesson, .warm-force .lesson-content {
+  background: linear-gradient(180deg, #FFFFFF, #FFF7ED) !important;
+  color: var(--clr-text) !important;
+}
+
+/* Ensure contrast for Progress summary highlight cards (Total Points / Current Streak)
+   These are high-importance visual indicators and should remain legible across themes. */
+.points-card,
+.streak-card {
+  color: #ffffff; /* base text white for strong contrast */
+}
+
+.points-card h3,
+.points-card p,
+.points-card .points-card-value,
+.streak-card h3,
+.streak-card p,
+.streak-card .streak-card-value {
+  color: rgba(255,255,255,0.95);
+}
+
+/* Increase specificity when a theme class is present so these stay visible */
+.theme-warm .points-card,
+.theme-warm .streak-card,
+.theme-default .points-card,
+.theme-default .streak-card,
+.theme-wireframe .points-card,
+.theme-wireframe .streak-card {
+  color: rgba(255,255,255,0.95) !important;
+}
+
+/* In case any theme sets a dark color with higher specificity, force white text
+   for these cards to guarantee readability. */
+.points-card, .streak-card { color: #fff !important; }
+.points-card h3, .points-card p, .streak-card h3, .streak-card p { color: #fff !important; }
+
+/* Ensure hero paragraph is high-contrast when the warm theme (fire icon) is active.
+   This targets the hero paragraph only when `.theme-warm` is present (html/body class)
+   and forces a readable color + full opacity. */
+html.theme-warm .hero p,
+body.theme-warm .hero p,
+.theme-warm .hero p {
+  color: var(--clr-text) !important;
+  opacity: 1 !important;
+}
+
+/* Also ensure hero heading remains high contrast under warm theme */
+html.theme-warm .hero h2,
+body.theme-warm .hero h2,
+.theme-warm .hero h2 {
+  color: var(--clr-text) !important;
+}
+.theme-toggle button {
+  background: transparent;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--clr-text);
+  transition: background 0.18s ease, transform 0.12s ease;
+}
+.theme-toggle button[aria-pressed="true"] {
+  background: linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));
+  transform: translateY(-1px);
+}
+
+/* Card header accent & softer corners */
+.card {
+  border-radius: 14px;
+  padding: calc(var(--space-lg) + 6px);
+}
+.card h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.card h3::before {
+  content: '';
+  width: 6px; height: 24px; border-radius: 6px;
+  background: var(--gradient-primary);
+  display: inline-block;
+  transform: translateY(-2px);
+}
+
+/* Card footer grouping for actions */
+.card .card-actions {
+  margin-top: var(--space-md);
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+/* Inputs / selects: friendlier look */
+input[type="text"], textarea, select {
+  border-radius: 12px;
+  border: 1px solid #ECECEC;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+}
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 6px 24px rgba(16,24,40,0.06), 0 0 0 4px rgba(249,115,22,0.06);
+  border-color: rgba(249,115,22,0.14);
+}
+
+/* Slightly larger touch targets for buttons */
+.btn { padding: 0.7rem 1.25rem; }
+
+/* Subtle entrance for hero and cards */
+.hero { transform-origin: top left; }
+.hero, .card { transition: transform 260ms cubic-bezier(.2,.9,.3,1), box-shadow 260ms; }
+
+/* Tiny helper: visually pleasant badges */
+.badge { border-radius: 999px; padding: 6px 10px; background: rgba(0,0,0,0.04); color: var(--clr-text); }
+

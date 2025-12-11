@@ -2,64 +2,105 @@ const MOCK_LESSONS = [
   {
     id: 1,
     title: "Introduction to JavaScript",
-    description: "Learn the fundamentals of JavaScript programming",
-    content: "JavaScript is a versatile programming language that powers the web. It allows you to create interactive and dynamic content.",
-    duration: "15 min",
+    description: "Fundamentals: variables, control flow, and functions.",
+    content: "This lesson covers the basics of JavaScript: declaring variables, using functions, and control flow statements (if, switch, loops). You'll write small snippets and run them in the browser console.",
+    duration: "12 min",
     difficulty: "beginner",
-    topics: ["variables", "functions", "loops"],
+    topics: ["javascript", "basics", "syntax"],
     quiz: [
-      {
-        question: "What is JavaScript primarily used for?",
-        options: ["Styling web pages", "Adding interactivity", "Database management", "Server configuration"],
-        correctAnswer: 1
-      },
-      {
-        question: "Which keyword is used to declare a constant?",
-        options: ["var", "let", "const", "static"],
-        correctAnswer: 2
-      }
+      { question: "What keyword declares a block-scoped variable?", options: ["var", "let", "const", "function"], correctAnswer: 1 },
+      { question: "Which structure repeats code while a condition is true?", options: ["if", "for", "switch", "try"], correctAnswer: 1 }
     ]
   },
   {
     id: 2,
-    title: "ES6 Modules",
-    description: "Master modern JavaScript module patterns",
-    content: "ES6 modules allow you to organize your code into reusable pieces. Use import/export to share functionality between files.",
-    duration: "20 min",
+    title: "ES Modules & Imports",
+    description: "Organize code using import/export and default exports.",
+    content: "ES Modules help keep code modular and reusable. Learn the difference between named and default exports, and how to import functions, objects, and classes across files.",
+    duration: "18 min",
     difficulty: "intermediate",
-    topics: ["import", "export", "modules"],
+    topics: ["modules", "import", "export"],
     quiz: [
-      {
-        question: "How do you export a function in ES6?",
-        options: ["module.exports", "export function", "exports =", "return function"],
-        correctAnswer: 1
-      },
-      {
-        question: "What is the correct import syntax?",
-        options: ["include 'file'", "import from 'file'", "import { name } from 'file'", "require('file')"],
-        correctAnswer: 2
-      }
+      { question: "How do you export a named function?", options: ["export function f(){}", "module.exports = f", "export default function f(){}", "include f"], correctAnswer: 0 },
+      { question: "How do you import a default export?", options: ["import {x} from './x'", "import x from './x'", "require('./x')", "include './x'"], correctAnswer: 1 }
     ]
   },
   {
     id: 3,
-    title: "Async JavaScript",
-    description: "Handle asynchronous operations effectively",
-    content: "Async/await makes asynchronous code look synchronous. Use try/catch for error handling and Promise.all for parallel operations.",
-    duration: "25 min",
-    difficulty: "advanced",
+    title: "Asynchronous JavaScript",
+    description: "Promises, async/await and handling network requests.",
+    content: "Understand Promises and the async/await syntax. Learn how to fetch data, handle errors, and run parallel requests with Promise.all.",
+    duration: "22 min",
+    difficulty: "intermediate",
     topics: ["promises", "async/await", "fetch"],
     quiz: [
-      {
-        question: "What does async/await help with?",
-        options: ["Synchronous code", "Asynchronous operations", "Variable declarations", "CSS styling"],
-        correctAnswer: 1
-      },
-      {
-        question: "How do you handle errors in async functions?",
-        options: ["if/else", "try/catch", "switch", "throw only"],
-        correctAnswer: 1
-      }
+      { question: "Which method turns a callback into a Promise?", options: ["Promise.resolve", "new Promise", "async function", "setTimeout"], correctAnswer: 1 },
+      { question: "What does Promise.all do?", options: ["Runs functions in sequence", "Runs promises in parallel and waits for all", "Cancels promises", "Retries promises"], correctAnswer: 1 }
+    ]
+  },
+  {
+    id: 4,
+    title: "DOM Manipulation Basics",
+    description: "Selecting and updating elements, event listeners.",
+    content: "Learn how to select DOM elements, update text and attributes, and attach event listeners to make interactive UIs.",
+    duration: "15 min",
+    difficulty: "beginner",
+    topics: ["dom", "events", "selectors"],
+    quiz: [
+      { question: "Which method selects an element by CSS selector?", options: ["getElementById", "querySelector", "getElementsByClassName", "select"], correctAnswer: 1 },
+      { question: "Which event fires when a user clicks an element?", options: ["keydown", "submit", "click", "focus"], correctAnswer: 2 }
+    ]
+  },
+  {
+    id: 5,
+    title: "Performance Fundamentals",
+    description: "Minimize render time and reduce layout thrashing.",
+    content: "This lesson covers techniques to improve front-end performance: batching DOM updates, using requestAnimationFrame, and avoiding expensive layout thrashing.",
+    duration: "20 min",
+    difficulty: "intermediate",
+    topics: ["performance", "rendering", "optimization"],
+    quiz: [
+      { question: "What helps avoid layout thrashing?", options: ["Frequent DOM reads/writes", "Batching reads and writes", "Multiple synchronous style changes", "Using inline styles"], correctAnswer: 1 },
+      { question: "Which API schedules visual updates before paint?", options: ["setTimeout", "requestAnimationFrame", "Promise", "fetch"], correctAnswer: 1 }
+    ]
+  },
+  {
+    id: 6,
+    title: "Accessibility Basics",
+    description: "Improve UX with semantic HTML and ARIA.",
+    content: "Learn accessible patterns: use semantic elements, provide ARIA labels where needed, and ensure keyboard navigability and sufficient contrast.",
+    duration: "14 min",
+    difficulty: "beginner",
+    topics: ["a11y", "semantic-html", "aria"],
+    quiz: [
+      { question: "What improves screen reader support?", options: ["Non-semantic divs", "Aria-labels and semantic tags", "Only CSS", "Inline scripts"], correctAnswer: 1 },
+      { question: "Which key should move keyboard focus?", options: ["Tab", "Space", "Enter", "Alt"], correctAnswer: 0 }
+    ]
+  },
+  {
+    id: 7,
+    title: "Testing JavaScript",
+    description: "Unit tests with simple frameworks and testable design.",
+    content: "Understand how to write unit tests, organize small testable functions, and run tests with minimal tooling.",
+    duration: "18 min",
+    difficulty: "intermediate",
+    topics: ["testing", "unit-tests", "vitest"],
+    quiz: [
+      { question: "Why write unit tests?", options: ["To slow development", "To verify behavior and prevent regressions", "To obfuscate code", "To avoid reviews"], correctAnswer: 1 },
+      { question: "Which is a unit testing tool used here?", options: ["Vitest", "Lighthouse", "Webpack", "ESLint"], correctAnswer: 0 }
+    ]
+  },
+  {
+    id: 8,
+    title: "Basic Web Security",
+    description: "Defend against common client-side issues like XSS.",
+    content: "Learn simple client-side security practices: sanitize untrusted HTML, use Content Security Policy, and avoid unsafe inline scripts.",
+    duration: "16 min",
+    difficulty: "intermediate",
+    topics: ["security", "xss", "csp"],
+    quiz: [
+      { question: "What reduces XSS risk?", options: ["Using innerHTML with user input", "Sanitizing/safe APIs", "Allowing all scripts", "Disabling CSP"], correctAnswer: 1 },
+      { question: "What does CSP stand for?", options: ["Client-side Policy", "Content Security Policy", "Content Styling Practice", "Cross Site Policy"], correctAnswer: 1 }
     ]
   }
 ];
@@ -69,7 +110,7 @@ const API_CONFIG = {
   timeout: 5000,
   retryAttempts: 3,
   retryDelay: 1000,
-  useMockData: false,
+  useMockData: true,
   networkDelayMs: 0,
   errorRate: 0
 };

@@ -52,7 +52,7 @@ export function validateEmail(email) {
  * @returns {string} Sanitized string
  */
 export function sanitizeHTML(str) {
-  if (typeof str !== 'string') return '';
+  if (typeof str !== 'string') {return '';}
   return str
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -68,7 +68,7 @@ export function sanitizeHTML(str) {
  * @returns {boolean} Whether URL is safe
  */
 export function validateURL(url) {
-  if (typeof url !== 'string') return false;
+  if (typeof url !== 'string') {return false;}
   const normalized = url.trim().toLowerCase();
   // Block dangerous protocols
   const dangerousProtocols = ['javascript:', 'data:', 'vbscript:', 'file:'];
@@ -82,11 +82,12 @@ export function validateURL(url) {
  * @returns {string} Sanitized input
  */
 export function sanitizeInput(input, maxLength = 1000) {
-  if (typeof input !== 'string') return '';
+  if (typeof input !== 'string') {return '';}
   // Trim and limit length
   let sanitized = input.trim().slice(0, maxLength);
-  // Remove any control characters
-  sanitized = sanitized.replace(/[\x00-\x1F\x7F]/g, '');
+  // Remove any control characters (use Unicode category for control characters)
+  // Using Unicode property escape to avoid embedding raw control-byte escapes in the regex
+  sanitized = sanitized.replace(/\p{Cc}/gu, '');
   return sanitizeHTML(sanitized);
 }
 

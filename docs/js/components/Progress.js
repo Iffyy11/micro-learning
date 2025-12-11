@@ -17,7 +17,7 @@ export function createProgress() {
      * @param {HTMLElement} container - Target container element
      */
     render(container) {
-      if (!container) return;
+      if (!container) {return;}
       
       const completedLessons = store.get('completedLessons') || [];
       const progress = store.get('progress') || 0;
@@ -161,7 +161,7 @@ export function createProgress() {
      * @param {HTMLElement} container - Container element
      */
     subscribeToUpdates(container) {
-      const unsubscribe = store.subscribe('progress-component', (oldState, newState) => {
+      const _unsubscribe = store.subscribe('progress-component', (oldState, newState) => {
         if (oldState.progress !== newState.progress || 
             oldState.completedLessons.length !== newState.completedLessons.length) {
           this.render(container);

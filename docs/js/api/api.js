@@ -126,7 +126,7 @@ class APIError extends Error {
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-const shouldSimulateError = () => {
+const _shouldSimulateError = () => {
   return Math.random() < API_CONFIG.errorRate;
 };
 
@@ -219,7 +219,7 @@ export const api = {
         timestamp: Date.now()
       };
     } catch (error) {
-      if (error instanceof APIError) throw error;
+      if (error instanceof APIError) {throw error;}
       throw new APIError('Failed to fetch lessons', 500, error.message);
     }
   },
@@ -278,7 +278,7 @@ export const api = {
         timestamp: Date.now()
       };
     } catch (error) {
-      if (error instanceof APIError) throw error;
+      if (error instanceof APIError) {throw error;}
       throw new APIError('Failed to fetch lesson', 500, error.message);
     }
   },
@@ -297,7 +297,7 @@ export const api = {
         let correctAnswers = 0;
         const results = answers.map((answer, index) => {
           const isCorrect = answer === lesson.quiz[index].correctAnswer;
-          if (isCorrect) correctAnswers++;
+          if (isCorrect) {correctAnswers++;}
           return {
             questionIndex: index,
             userAnswer: answer,
@@ -359,7 +359,7 @@ export const api = {
         timestamp: Date.now()
       };
     } catch (error) {
-      if (error instanceof APIError) throw error;
+      if (error instanceof APIError) {throw error;}
       throw new APIError('Failed to submit quiz', 500, error.message);
     }
   },
@@ -388,7 +388,7 @@ export const api = {
         timestamp: Date.now()
       };
     } catch (error) {
-      if (error instanceof APIError) throw error;
+      if (error instanceof APIError) {throw error;}
       throw new APIError('Failed to save progress', 500, error.message);
     }
   },
@@ -441,7 +441,7 @@ export const api = {
         timestamp: Date.now()
       };
     } catch (error) {
-      if (error instanceof APIError) throw error;
+      if (error instanceof APIError) {throw error;}
       throw new APIError('Failed to search lessons', 500, error.message);
     }
   }

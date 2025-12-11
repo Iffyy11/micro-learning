@@ -18,7 +18,7 @@ export function removeDuplicates(arr) {
  * @returns {number} Percentage rounded to nearest integer
  */
 export function calculatePercentage(value, total) {
-  if (total === 0) return 0;
+  if (total === 0) {return 0;}
   return Math.round((value / total) * 100);
 }
 
@@ -29,7 +29,7 @@ export function calculatePercentage(value, total) {
  * @returns {Array} Array of chunks
  */
 export function chunkArray(arr, size) {
-  if (arr.length === 0) return [];
+  if (arr.length === 0) {return [];}
   const chunks = [];
   for (let i = 0; i < arr.length; i += size) {
     chunks.push(arr.slice(i, i + size));
@@ -61,8 +61,8 @@ export function shuffleArray(arr) {
 export function sortByProperty(arr, property, ascending = true) {
   const sorted = [...arr];
   sorted.sort((a, b) => {
-    if (a[property] < b[property]) return ascending ? -1 : 1;
-    if (a[property] > b[property]) return ascending ? 1 : -1;
+    if (a[property] < b[property]) {return ascending ? -1 : 1;}
+    if (a[property] > b[property]) {return ascending ? 1 : -1;}
     return 0;
   });
   return sorted;

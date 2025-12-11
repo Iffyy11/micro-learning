@@ -3,8 +3,8 @@
  * Creates and manages quiz components
  */
 
-import { store, stateUtils } from '../store/state.js';
-import { validateAnswer, sanitizeHTML } from '../utils/validation.js';
+import { stateUtils } from '../store/state.js';
+import { validateAnswer as _validateAnswer, sanitizeHTML } from '../utils/validation.js';
 
 /**
  * Quiz data repository
@@ -69,7 +69,7 @@ export function createQuiz(quizId) {
      * @param {HTMLElement} container - Target container element
      */
     render(container) {
-      if (!container) return;
+      if (!container) {return;}
       
       container.innerHTML = `
         <div class="quiz-container">
@@ -144,7 +144,7 @@ export function createQuiz(quizId) {
      * Submit quiz and show results
      */
     submitQuiz() {
-      if (submitted) return;
+      if (submitted) {return;}
       
       const results = this.gradeQuiz();
       submitted = true;
@@ -165,7 +165,7 @@ export function createQuiz(quizId) {
         const correctOption = question.options.find(opt => opt.correct);
         const isCorrect = userAnswer === correctOption.value;
         
-        if (isCorrect) correct++;
+        if (isCorrect) {correct++;}
         
         details.push({
           question: question.text,
@@ -189,7 +189,7 @@ export function createQuiz(quizId) {
      */
     displayResults(results) {
       const resultsContainer = document.querySelector('#quiz-results');
-      if (!resultsContainer) return;
+      if (!resultsContainer) {return;}
       
       resultsContainer.innerHTML = `
         <div class="results-summary ${results.percentage >= 70 ? 'pass' : 'fail'}">

@@ -65,7 +65,7 @@ class IndexedDBManager {
   }
 
   async add(storeName, data) {
-    if (!this.db) await this.init();
+    if (!this.db) {await this.init();}
     
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readwrite');
@@ -78,7 +78,7 @@ class IndexedDBManager {
   }
 
   async put(storeName, data) {
-    if (!this.db) await this.init();
+    if (!this.db) {await this.init();}
     
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readwrite');
@@ -91,7 +91,7 @@ class IndexedDBManager {
   }
 
   async get(storeName, key) {
-    if (!this.db) await this.init();
+    if (!this.db) {await this.init();}
     
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readonly');
@@ -104,7 +104,7 @@ class IndexedDBManager {
   }
 
   async getAll(storeName) {
-    if (!this.db) await this.init();
+    if (!this.db) {await this.init();}
     
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readonly');
@@ -117,7 +117,7 @@ class IndexedDBManager {
   }
 
   async delete(storeName, key) {
-    if (!this.db) await this.init();
+    if (!this.db) {await this.init();}
     
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readwrite');
@@ -130,7 +130,7 @@ class IndexedDBManager {
   }
 
   async clear(storeName) {
-    if (!this.db) await this.init();
+    if (!this.db) {await this.init();}
     
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readwrite');
@@ -171,7 +171,7 @@ class IndexedDBManager {
   }
 
   async getQuizResultsByLesson(lessonId) {
-    if (!this.db) await this.init();
+    if (!this.db) {await this.init();}
     
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([STORES.QUIZ_RESULTS], 'readonly');

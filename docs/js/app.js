@@ -2,12 +2,12 @@
 import { router, initializeRoutes, routes } from './router/router.js';
 import { store } from './store/state.js';
 import { qs } from './utils/dom.js';
-import { api, APIError } from './api/api.js';
+import { api, APIError as _APIError } from './api/api.js';
 import { dbManager } from './storage/indexedDB.js';
-import { LoadingSpinner, showLoadingOverlay, hideLoadingOverlay } from './components/LoadingSpinner.js';
+import { LoadingSpinner, showLoadingOverlay as _showLoadingOverlay, hideLoadingOverlay as _hideLoadingOverlay } from './components/LoadingSpinner.js';
 import { ErrorMessage, showErrorToast, showNetworkError } from './components/ErrorMessage.js';
 import { debounce } from './utils/debounce.js';
-import { sanitizeHTML, sanitizeInput, validateLessonId } from './utils/validation.js';
+import { sanitizeHTML, sanitizeInput, validateLessonId as _validateLessonId } from './utils/validation.js';
 
 // Lazy-loaded modules (loaded on demand)
 let LessonModule = null;
@@ -23,7 +23,7 @@ class App {
   }
 
   renderCategoryHighlights(lessons = []) {
-    if (!Array.isArray(lessons) || lessons.length === 0) return '';
+    if (!Array.isArray(lessons) || lessons.length === 0) {return '';}
 
     // Group lessons by topic (topics is an array on each lesson)
     const map = {};
@@ -31,7 +31,7 @@ class App {
       const topics = Array.isArray(lesson.topics) ? lesson.topics : (lesson.topic ? [lesson.topic] : []);
       topics.forEach(t => {
         const key = sanitizeHTML(String(t || 'Misc'));
-        if (!map[key]) map[key] = [];
+        if (!map[key]) {map[key] = [];}
         map[key].push(lesson);
       });
     });
@@ -356,7 +356,7 @@ class App {
       const topics = new Set();
       (this.lessons || []).forEach(l => {
         (l.topics || []).forEach(t => {
-          if (t && String(t).trim()) topics.add(String(t).toLowerCase());
+          if (t && String(t).trim()) {topics.add(String(t).toLowerCase());}
         });
       });
 
@@ -364,7 +364,7 @@ class App {
       if (topics.size > 0) {
         const opts = ['All', ...Array.from(topics).sort()];
         categoryFilter.innerHTML = opts.map(o => {
-          if (o === 'All') return `<option value="All">All</option>`;
+          if (o === 'All') {return `<option value="All">All</option>`;}
           // Capitalize label but keep value lowercase for matching
           const label = o.charAt(0).toUpperCase() + o.slice(1);
           return `<option value="${o}">${label}</option>`;
@@ -372,7 +372,7 @@ class App {
       }
     }
 
-    if (!searchInput || !container) return;
+    if (!searchInput || !container) {return;}
 
     const performSearch = debounce(async (query) => {
       try {
@@ -429,7 +429,7 @@ class App {
   }
 
   async renderLessonAsync(lessonId) {
-    const { createLesson } = await this.loadLessonModule();
+    const { createLesson: _createLesson } = await this.loadLessonModule();
     
     if (this.currentComponent?.destroy) {
       this.currentComponent.destroy();

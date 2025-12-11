@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const skip = document.querySelector(".skip-link");
   const main = document.querySelector("main");
   if (skip && main) {
-    skip.addEventListener("click", (e) => {
+    skip.addEventListener("click", (_e) => {
       // Ensure the element can receive focus, then focus it
       main.setAttribute("tabindex", "-1");
       main.focus({ preventScroll: true });
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Move focus into nav when opening
       if (!expanded) {
         const firstLink = nav.querySelector("a");
-        if (firstLink) firstLink.focus();
+        if (firstLink) {firstLink.focus();}
       }
     });
   }
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Escape") {
       if (nav && nav.classList.contains("open")) {
         nav.classList.remove("open");
-        if (navToggle) navToggle.setAttribute("aria-expanded", "false");
+        if (navToggle) {navToggle.setAttribute("aria-expanded", "false");}
         navToggle?.focus();
       }
     }

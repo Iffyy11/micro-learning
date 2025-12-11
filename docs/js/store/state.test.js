@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { StateStore, stateUtils } from '../store/state.js';
+import { StateStore } from '../store/state.js';
 
 describe('StateStore', () => {
   let store;

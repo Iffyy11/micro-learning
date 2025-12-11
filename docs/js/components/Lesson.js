@@ -5,7 +5,7 @@
 
 import { store, stateUtils } from '../store/state.js';
 import { router } from '../router/router.js';
-import { sanitizeHTML, sanitizeInput } from '../utils/validation.js';
+import { sanitizeHTML, sanitizeInput as _sanitizeInput } from '../utils/validation.js';
 
 /**
  * Lesson data repository
@@ -90,7 +90,7 @@ export function createLesson(lessonId) {
      * @param {HTMLElement} container - Target container element
      */
     render(container) {
-      if (!container) return;
+      if (!container) {return;}
       
       // sanitize content strings before rendering
       const safeIntro = sanitizeHTML(lesson.content.intro || '');

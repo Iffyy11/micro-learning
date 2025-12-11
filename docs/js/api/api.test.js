@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { api, APIError, API_CONFIG } from './api.js';
 
 describe('API Service', () => {

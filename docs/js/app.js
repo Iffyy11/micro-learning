@@ -62,7 +62,7 @@ class App {
   // Lazy load modules on demand for performance
   async loadLessonModule() {
     if (!LessonModule) {
-      LessonModule = await import('./components/Lesson.js');
+      LessonModule = await import('./api/Lesson.js');
     }
     return LessonModule;
   }

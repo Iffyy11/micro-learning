@@ -4,7 +4,7 @@
  */
 
 import { store } from '../store/state.js';
-import { getAllLessons } from './Lesson.js';
+import { getAllLessons } from '../api/Lesson.js';
 
 /**
  * Factory function to create a Progress component
